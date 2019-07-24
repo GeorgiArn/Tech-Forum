@@ -1,0 +1,9 @@
+/.web-server-pid
+/app/config/parameters.yml
+/build/
+/phpunit.xml
+/var/
+/tests/
+/vendor/
+/web/bundles/
+**/.idea/*
