@@ -5,8 +5,8 @@
     <div class = "container col-md-6 login-form">
         <form name="authenticate" action="{{ path('security_login') }}" method="post">
             <div class="form-group">
-                <label for="user_email">Email address</label>
-                <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email" name ="_username" required >
+                <label for="user_username">User</label>
+                <input type="text" class="form-control" placeholder="Username" name ="_username" required >
             </div>
             <div class="form-group">
                 <label for="user_password">Password</label>
