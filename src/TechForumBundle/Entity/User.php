@@ -2,6 +2,7 @@
 
 namespace TechForumBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -50,6 +51,18 @@ class User implements UserInterface
      */
     private $fullName;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="TechForumBundle\Entity\Question", mappedBy="author")
+     *
+     */
+    private $questions;
+
+    public function __construct()
+    {
+        $this->questions = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -197,6 +210,25 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getQuestions()
+    {
+        return $this->questions;
+    }
+
+    /**
+     * @param Question $question
+     * @return User
+     */
+    public function addQuestion(Question $question)
+    {
+        $this->questions[] = $question;
+
+        return $this;
     }
 }
 
