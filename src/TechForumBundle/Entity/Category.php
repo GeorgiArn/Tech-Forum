@@ -2,6 +2,7 @@
 
 namespace TechForumBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,6 +29,18 @@ class Category
      */
     private $name;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="TechForumBundle\Entity\Question", mappedBy="category")
+     *
+     */
+    private $questions;
+
+    public function __construct()
+    {
+        $this->questions = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -61,6 +74,25 @@ class Category
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getQuestions()
+    {
+        return $this->questions;
+    }
+
+    /**
+     * @param Question $question
+     * @return Category
+     */
+    public function setQuestion(Question $question)
+    {
+        $this->questions[] = $question;
+
+        return $this;
     }
 }
 
