@@ -43,6 +43,11 @@ class Question
     private $dateAdded;
 
     /**
+     * @var string
+     */
+    private $summary;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="TechForumBundle\Entity\User", inversedBy="questions")
@@ -143,6 +148,23 @@ class Question
     public function getDateAdded()
     {
         return $this->dateAdded;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSummary()
+    {
+        if ($this->summary === null) {
+            $this->setSummary();
+        }
+        return $this->summary;
+    }
+
+    public function setSummary()
+    {
+        $this->summary = substr($this->getDescription(),
+            0, strlen($this->getDescription()) / 2) . "...";
     }
 
     /**
