@@ -3,7 +3,7 @@
 {% block body %}
     <h2 class = "text-center ask-question-title">Ask Question</h2>
     <div class = "container col-md-6 register-form">
-        <form name="register" method="post">
+        <form name="register" action="{{ path('question_ask') }}" method="post">
             <div class="form-group">
                 <label for="question_title">Title</label>
                 <input type="text" class="form-control" placeholder="Title" name ="question[title]" required>
@@ -14,9 +14,9 @@
             </div>
             <div class="form-group">
                 <label for="question_category">Category</label>
-                <select class="form-control">
+                <select class="form-control" name = "question[category]" >
                     {% for category in categories %}
-                        <option name = "question[category]" value="{{ category.id }}">
+                        <option value="{{ category.id }}">
                             {{ category.name }}
                         </option>
                     {% endfor %}
@@ -24,7 +24,7 @@
             </div>
             <a class = "btn btn-default" href="{{ path('forum_index') }}">Cancel</a>
             <button type="submit" class="btn btn-primary ask-question-btn">Ask Question</button>
-{#            {{  form_row(form._token) }}#}
+            {{  form_row(form._token) }}
         </form>
     </div>
 {% endblock %}

@@ -4,8 +4,11 @@ namespace TechForumBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Tests\Fixtures\Validation\Article;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use TechForumBundle\Entity\Question;
+use TechForumBundle\Form\QuestionType;
 
 class QuestionController extends Controller
 {
@@ -19,11 +22,29 @@ class QuestionController extends Controller
      */
     public function create(Request $request)
     {
+
+        $question = new Question();
+
+        $form = $this->createForm(QuestionType::class, $question);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $question->setAuthor($this->getUser());
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($question);
+            $em->flush();
+
+            return $this->redirectToRoute('forum_index');
+        }
+
         $categories = $this->getDoctrine()
             ->getRepository('TechForumBundle:Category')
             ->getAllCategories();
 
         return $this->render('question/ask.html.twig',
-            ['categories' => $categories]);
+            [
+                'form' => $form->createView(),
+                'categories' => $categories,
+            ]);
     }
 }
