@@ -10,4 +10,14 @@ namespace TechForumBundle\Repository;
  */
 class CategoryRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getAllCategories()
+    {
+        return
+        $this
+            ->createQueryBuilder('category')
+            ->orderBy('category.name','ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 }
