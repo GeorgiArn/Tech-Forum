@@ -1,5 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+<div class = "row questions-list">
+    {% for question in questions %}
+        <div class = "col-md-6 col-sm-12 question">
+            <h2 class = "question-title">{{ question.title }}</h2>
+            <p class = "question-summary">{{ question.summary }}</p>
+            <p class = "question-category">Category: {{ question.category.name }}</p>
+            <p class = "question-author">
+               Author: {{ question.author.fullName }}
+            </p>
+            <div class = "read-more-btn">
+            <a class = "btn btn-secondary" href = "#">View Question</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 {% endblock %}

@@ -19,3 +19,34 @@ body {
 .register-form {
   margin-top: 30px;
 }
+
+.questions-list {
+  margin-top: 30px;
+}
+
+.question-title {
+  text-align: center;
+}
+
+.question-author {
+  text-align: right;
+  margin-right: 40px;
+}
+
+.read-more-btn {
+  text-align: right;
+  margin-right: 40px;
+}
+
+.question {
+  margin-bottom: 20px;
+}
+
+.question-category {
+  text-align: right;
+  margin-right: 40px;
+}
+
+.question-summary {
+  margin-left: 25px;
+}
