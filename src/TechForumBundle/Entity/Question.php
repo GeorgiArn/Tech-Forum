@@ -164,7 +164,7 @@ class Question
     public function setSummary()
     {
         $this->summary = substr($this->getDescription(),
-            0, strlen($this->getDescription()) / 2) . "...";
+            0, 100) . "...";
     }
 
     /**
