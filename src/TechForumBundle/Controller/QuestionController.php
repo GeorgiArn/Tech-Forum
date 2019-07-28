@@ -47,4 +47,19 @@ class QuestionController extends Controller
                 'categories' => $categories,
             ]);
     }
+
+    /**
+     * @Route("/question/{id}", name = "question_view")
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function viewQuestion($id)
+    {
+        $question = $this->getDoctrine()
+            ->getRepository('TechForumBundle:Question')
+            ->find($id);
+
+        return $this->render('question/question.html.twig', ['question' => $question]);
+    }
 }
