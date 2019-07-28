@@ -10,9 +10,10 @@
             <p class = "question-author">
                 Author: {{ question.author.fullName }}
             </p>
-            <div class = "back-btn">
-                <a class = "btn btn-secondary" href = "{{ path('forum_index') }}">Back</a>
-            </div>
+
+            <a class = "btn btn-success" href = "{{ path('question_edit', {id: question.id}) }}">Edit</a>
+            <a class = "btn btn-secondary" href = "{{ path('forum_index') }}">Back</a>
+
         </div>
     </div>
 </div>

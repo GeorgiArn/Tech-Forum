@@ -60,6 +60,52 @@ class QuestionController extends Controller
             ->getRepository('TechForumBundle:Question')
             ->find($id);
 
+
+        if ($question === null) {
+            return $this->redirectToRoute('forum_index');
+        }
+
         return $this->render('question/question.html.twig', ['question' => $question]);
+    }
+
+    /**
+     * @Route("question/edit/{id}", name = "question_edit")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editQuestion($id, Request $request)
+    {
+        $question = $this->getDoctrine()
+            ->getRepository(Question::class)
+            ->find($id);
+
+        $categories = $this->getDoctrine()
+            ->getRepository('TechForumBundle:Category')
+            ->getAllCategories();
+
+        if ($question === null) {
+            return $this->redirectToRoute('forum_index');
+        }
+
+        $form = $this->createForm(QuestionType::class, $question);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($question);
+            $em->flush();
+
+            return $this->redirectToRoute('question_view',
+                ['id' => $question->getId()]);
+        }
+        return $this->render('question/edit.html.twig',
+            [
+                'question' => $question,
+                'form' => $form->createView(),
+                'categories' => $categories,
+            ]);
     }
 }

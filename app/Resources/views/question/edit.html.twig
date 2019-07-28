@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2 class = "text-center edit-question-title">Edit Question</h2>
+    <div class = "container col-md-6 edit-form">
+        <form name="edit" action="{{ path('question_edit', {id: question.id}) }}" method="post">
+            <div class="form-group">
+                <label for="question_title">Title</label>
+                <input type="text" class="form-control" placeholder="Title" name ="question[title]"
+                       value="{{ question.title }}" required>
+            </div>
+            <div class="form-group">
+                <label for="question_description">Description</label>
+                <textarea class="form-control" rows = "6" name ="question[description]"
+                          required>{{ question.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="question_category">Category</label>
+                <select class="form-control" name = "question[category]" >
+                    {% for category in categories %}
+                        {% if category.name is same as(question.category.name) %}
+                            <option selected="selected" value="{{ category.id }}">
+                                {{ category.name }}
+                            </option>
+                        {% else %}
+                            <option value="{{ category.id }}">
+                                {{ category.name }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <a class = "btn btn-secondary" href = "{{ path('question_view', {'id': question.id}) }}">Cancel</a>
+            <button type="submit" class="btn btn-primary edit-question-btn">Edit Question</button>
+            {{  form_row(form._token) }}
+        </form>
+    </div>
+{% endblock %}
+
