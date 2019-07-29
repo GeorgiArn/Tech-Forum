@@ -95,7 +95,7 @@ class QuestionController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($question);
+            $em->merge($question);
             $em->flush();
 
             return $this->redirectToRoute('question_view',

@@ -5,6 +5,7 @@ namespace TechForumBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use TechForumBundle\Entity\Role;
 use TechForumBundle\Entity\User;
 use TechForumBundle\Form\UserType;
 
@@ -26,8 +27,18 @@ class UserController extends Controller
             $passwordHash = $this
                 ->get('security.password_encoder')
                 ->encodePassword($user, $user->getPassword());
-
             $user->setPassword($passwordHash);
+
+            $roleRepository = $this->getDoctrine()
+            ->getRepository(Role::class);
+
+            /** @var Role $userRole */
+            $userRole = $roleRepository->findOneBy(
+                ['name' => 'ROLE_USER']
+            );
+
+            $user->addRole($userRole);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
