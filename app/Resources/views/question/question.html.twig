@@ -11,8 +11,10 @@
                 Author: {{ question.author.fullName }}
             </p>
 
+            {% if app.getUser() and (app.getUser().isAuthor(question) or app.getUser().isAdmin()) %}
             <a class = "btn btn-success" href = "{{ path('question_edit', {id: question.id}) }}">Edit</a>
-            <a class = "btn btn-danger delete-btn" data-toggle="modal" data-target="#deleteModal" href = "#">Delete</a>
+            <a class = "btn btn-danger delete-btn" data-toggle="modal" data-target="#deleteModal" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
+            {% endif %}
             <a class = "btn btn-secondary" href = "{{ path('forum_index') }}">Back</a>
 
             <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
@@ -25,7 +27,7 @@
                             Are you sure you want to delete this question?
                         </div>
                         <div class="modal-footer">
-                            <a type="button" class="btn btn-secondary cancel-delete-btn" data-dismiss="modal" href ="#">Cancel</a>
+                            <a type="button" class="btn btn-secondary cancel-delete-btn" data-dismiss="modal" href = "{{ path('question_view', {'id': question.id}) }}">Cancel</a>
                             <a type="button" class="btn btn-danger" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
                         </div>
                     </div>
