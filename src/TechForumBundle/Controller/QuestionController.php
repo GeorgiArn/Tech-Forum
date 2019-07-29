@@ -20,7 +20,7 @@ class QuestionController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function create(Request $request)
+    public function createQuestion(Request $request)
     {
 
         $question = new Question();
@@ -107,5 +107,31 @@ class QuestionController extends Controller
                 'form' => $form->createView(),
                 'categories' => $categories,
             ]);
+    }
+
+    /**
+     *
+     * @Route("question/delete/{id}", name = "question_delete")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteQuestion($id)
+    {
+
+        $question = $this->getDoctrine()
+            ->getRepository("TechForumBundle:Question")
+            ->find($id);
+
+        if ($question === null) {
+            return $this->redirectToRoute('forum_index');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($question);
+        $em->flush();
+
+        return $this->redirectToRoute('forum_index');
     }
 }
