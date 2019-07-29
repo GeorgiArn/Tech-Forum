@@ -258,5 +258,22 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @param Question $question
+     * @return bool
+     */
+    public function isAuthor(Question $question)
+    {
+        return $question->getAuthor()->getId() === $this->getId();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return in_array("ROLE_ADMIN", $this->getRoles());
+    }
 }
 

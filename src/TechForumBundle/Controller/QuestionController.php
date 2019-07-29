@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Tests\Fixtures\Validation\Article;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use TechForumBundle\Entity\Question;
+use TechForumBundle\Entity\User;
 use TechForumBundle\Form\QuestionType;
 
 class QuestionController extends Controller
@@ -78,6 +79,7 @@ class QuestionController extends Controller
      */
     public function editQuestion($id, Request $request)
     {
+        /** @var Question $question */
         $question = $this->getDoctrine()
             ->getRepository(Question::class)
             ->find($id);
@@ -88,6 +90,13 @@ class QuestionController extends Controller
 
         if ($question === null) {
             return $this->redirectToRoute('forum_index');
+        }
+
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        if (!$currentUser->isAuthor($question) && !$currentUser->isAdmin()) {
+            return $this->redirectToRoute("forum_index");
         }
 
         $form = $this->createForm(QuestionType::class, $question);
@@ -126,6 +135,13 @@ class QuestionController extends Controller
 
         if ($question === null) {
             return $this->redirectToRoute('forum_index');
+        }
+
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        if (!$currentUser->isAuthor($question) && !$currentUser->isAdmin()) {
+            return $this->redirectToRoute("forum_index");
         }
 
         $em = $this->getDoctrine()->getManager();
