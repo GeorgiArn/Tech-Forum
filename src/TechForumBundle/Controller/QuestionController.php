@@ -202,6 +202,6 @@ class QuestionController extends Controller
         $em->persist($question);
         $em->flush();
 
-        return $this->redirectToRoute('forum_index');
+        return $this->redirectToRoute('question_view', ['id' => $question->getId()]);
     }
 }
