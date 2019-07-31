@@ -150,4 +150,24 @@ class QuestionController extends Controller
 
         return $this->redirectToRoute('forum_index');
     }
+
+    /**
+     * @Route("/questions/my_questions", name="my_questions")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getAllQuestionsByUser()
+    {
+        $questions = $this
+            ->getDoctrine()
+            ->getRepository(Question::class)
+            ->findBy(['author' => $this->getUser()]);
+
+
+        return $this->render("question/my_questions.html.twig",
+            [
+                'questions' => $questions,
+            ]);
+    }
 }
