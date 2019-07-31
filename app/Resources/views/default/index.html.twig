@@ -6,7 +6,17 @@
             {% for question in questions %}
                 <div class = "col-md-6 col-sm-12 question">
                     <h2 class = "question-title">{{ question.title }}</h2>
-                    <p class = "question-summary">{{ question.summary }}</p>
+                    {% if app.user and (app.user != question.author)%}
+                        {% if question.isLikedBy(app.user) %}
+                            <p class = "switch_like">
+                                <a href="{{ path('switch_like', {id: question.id}) }}">Dislike</a>
+                            </p>
+                        {% else %}
+                            <p class = "switch_like">
+                                <a href="{{ path('switch_like', {id: question.id}) }}">Like</a>
+                            </p>
+                        {% endif %}
+                    {% endif %}
                     <p class = "question-category">Category: {{ question.category.name }}</p>
                     <p class = "question-author">
                        Author: {{ question.author.fullName }}

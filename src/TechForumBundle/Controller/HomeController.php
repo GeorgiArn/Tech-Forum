@@ -21,6 +21,8 @@ class HomeController extends Controller
             ->getRepository(Question::class)->findAll();
 
         return $this->render('default/index.html.twig',
-            ['questions' => $questions]);
+            [
+                'questions' => $questions,
+            ]);
     }
 }

@@ -70,6 +70,13 @@ class User implements UserInterface
      */
     private $roles;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="TechForumBundle\Entity\Question", mappedBy="likers")
+     */
+    private $likedQuestions;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
@@ -274,6 +281,22 @@ class User implements UserInterface
     public function isAdmin()
     {
         return in_array("ROLE_ADMIN", $this->getRoles());
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getLikedQuestions()
+    {
+        return $this->likedQuestions;
+    }
+
+    /**
+     * @param ArrayCollection $likedQuestions
+     */
+    public function setLikedQuestions($likedQuestions)
+    {
+        $this->likedQuestions = $likedQuestions;
     }
 }
 

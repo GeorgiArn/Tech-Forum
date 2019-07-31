@@ -2,6 +2,7 @@
 
 namespace TechForumBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,11 +44,6 @@ class Question
     private $dateAdded;
 
     /**
-     * @var string
-     */
-    private $summary;
-
-    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="TechForumBundle\Entity\User", inversedBy="questions")
@@ -62,6 +58,17 @@ class Question
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
     private $category;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="TechForumBundle\Entity\User")
+     * @ORM\JoinTable(name="questions_likes",
+     *     joinColumns={@ORM\JoinColumn(name="question_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="liker_id",referencedColumnName="id")}
+     *     )
+     */
+    private $likers;
 
     public function __construct()
     {
@@ -151,23 +158,6 @@ class Question
     }
 
     /**
-     * @return string
-     */
-    public function getSummary()
-    {
-        if ($this->summary === null) {
-            $this->setSummary();
-        }
-        return $this->summary;
-    }
-
-    public function setSummary()
-    {
-        $this->summary = substr($this->getDescription(),
-            0, 100) . "...";
-    }
-
-    /**
      * @return User
      */
     public function getAuthor()
@@ -202,6 +192,60 @@ class Question
     {
         $this->category = $category;
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getLikers()
+    {
+        return $this->likers;
+    }
+
+    /**
+     * @param ArrayCollection $likers
+     */
+    public function setLikers($likers)
+    {
+        $this->likers = $likers;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return $this
+     */
+    public function addLike(User $user)
+    {
+        $this->likers[] = $user;
+
+        return $this;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return $this
+     */
+    public function removeLike(User $user)
+    {
+        $this->likers->removeElement($user);
+
+        return $this;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function isLikedBy(User $user)
+    {
+        foreach ($this->getLikers () as $liker) {
+            if ($user->getId () === $liker->getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

@@ -11,7 +11,6 @@
                     <div class = "read-more-btn">
                         <a class = "btn btn-success" href = "{{ path('question_edit', {id: question.id}) }}">Edit</a>
                         <a class = "btn btn-danger delete-btn" data-toggle="modal" data-target="#deleteModal" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
-                        <a class = "btn btn-secondary" href = "{{ path('forum_index')}}">Back</a>
                     </div>
                 </div>
 
@@ -32,6 +31,7 @@
                     </div>
                 </div>
             {% endfor %}
+            <a class = "btn btn-secondary" href = "{{ path('forum_index')}}">Back</a>
         </div>
     </div>
 {% endblock %}

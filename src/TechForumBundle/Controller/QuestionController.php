@@ -110,6 +110,7 @@ class QuestionController extends Controller
             return $this->redirectToRoute('question_view',
                 ['id' => $question->getId()]);
         }
+
         return $this->render('question/edit.html.twig',
             [
                 'question' => $question,
@@ -169,5 +170,38 @@ class QuestionController extends Controller
             [
                 'questions' => $questions,
             ]);
+    }
+
+
+    /**
+     * @Route("/questions/switch_like/{id}", name ="switch_like")
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function switchLike($id)
+    {
+        $question = $this->getDoctrine()
+            ->getRepository("TechForumBundle:Question")
+            ->find($id);
+
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        if ($currentUser->isAuthor($question)) {
+            return $this->redirectToRoute('forum_index');
+        }
+
+        if ($question->isLikedBy($currentUser)) {
+            $question->removeLike($currentUser);
+        } else {
+            $question->addLike($currentUser);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($question);
+        $em->flush();
+
+        return $this->redirectToRoute('forum_index');
     }
 }

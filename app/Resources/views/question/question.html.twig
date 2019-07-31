@@ -5,6 +5,17 @@
     <div class ="row">
         <div class = "col-md-12 question">
             <h2 class = "question-title">{{ question.title }}</h2>
+            {% if app.user and (app.user != question.author)%}
+                {% if question.isLikedBy(app.user) %}
+                    <p class = "switch_like">
+                        <a href="{{ path('switch_like', {id: question.id}) }}">Dislike</a>
+                    </p>
+                {% else %}
+                    <p class = "switch_like">
+                        <a href="{{ path('switch_like', {id: question.id}) }}">Like</a>
+                    </p>
+                {% endif %}
+            {% endif %}
             <p class = "question-description">{{ question.description }}</p>
             <p class = "question-category">Category: {{ question.category.name }}</p>
             <p class = "question-author">
