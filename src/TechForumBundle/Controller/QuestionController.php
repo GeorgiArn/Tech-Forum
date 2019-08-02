@@ -123,7 +123,7 @@ class QuestionController extends Controller
      *
      * @Route("question/delete/{id}", name = "question_delete")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-     *
+     * 
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -199,7 +199,7 @@ class QuestionController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $em->persist($question);
+        $em->merge($question);
         $em->flush();
 
         return $this->redirectToRoute('question_view', ['id' => $question->getId()]);

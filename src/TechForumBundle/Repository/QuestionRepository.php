@@ -2,6 +2,10 @@
 
 namespace TechForumBundle\Repository;
 
+use Doctrine\ORM\EntityManagerInterface;
+use TechForumBundle\Entity\Question;
+use TechForumBundle\Entity\User;
+
 /**
  * QuestionRepository
  *
