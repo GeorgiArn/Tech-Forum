@@ -37,6 +37,14 @@ class Question
     private $description;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="TechForumBundle\Entity\Answer", mappedBy="question")
+     *
+     */
+    private $answers;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="dateAdded", type="datetime")
@@ -246,6 +254,25 @@ class Question
             }
         }
         return false;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAnswers(): ArrayCollection
+    {
+        return $this->answers;
+    }
+
+    /**
+     * @param Answer $answer
+     * @return Question
+     */
+    public function addAnswer(Answer $answer)
+    {
+        $this->answers[] = $answer;
+
+        return $this;
     }
 }
 

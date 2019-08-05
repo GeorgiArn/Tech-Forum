@@ -55,3 +55,14 @@ body {
 .switch_like {
   font-size: 18px;
 }
+
+.answer-author {
+  text-align: right;
+}
+
+.answer {
+  background-color: beige;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+}

@@ -4,12 +4,14 @@ namespace TechForumBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\FrameworkBundle\Tests\Fixtures\Validation\Article;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use TechForumBundle\Entity\Answer;
 use TechForumBundle\Entity\Question;
 use TechForumBundle\Entity\User;
+use TechForumBundle\Form\AnswerType;
 use TechForumBundle\Form\QuestionType;
+use TechForumBundle\Repository\AnswerRepository;
 
 class QuestionController extends Controller
 {
@@ -23,7 +25,6 @@ class QuestionController extends Controller
      */
     public function createQuestion(Request $request)
     {
-
         $question = new Question();
 
         $form = $this->createForm(QuestionType::class, $question);
@@ -50,23 +51,50 @@ class QuestionController extends Controller
     }
 
     /**
-     * @Route("/question/{id}", name = "question_view")
+     * @Route("/question/view/{id}", name = "question_view")
      *
      * @param $id
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewQuestion($id)
+    public function viewQuestion($id, Request $request)
     {
         $question = $this->getDoctrine()
             ->getRepository('TechForumBundle:Question')
             ->find($id);
 
+        $answers = $this
+            ->getDoctrine()
+            ->getRepository(Answer::class)
+            ->findBy(['question' => $id]);
 
         if ($question === null) {
             return $this->redirectToRoute('forum_index');
         }
 
-        return $this->render('question/question.html.twig', ['question' => $question]);
+        return $this->render('question/question.html.twig',
+            [
+                'question' => $question,
+                'answers' => $answers,
+                'form' => $this->createForm(AnswerType::class)->createView()
+            ]);
+    }
+
+
+    /**
+     * @param Question $question
+     */
+    private function deleteAnswersByQuestion(Question $question)
+    {
+        $answers = $this->getDoctrine()
+            ->getRepository("TechForumBundle:Answer")
+            ->findBy(['question' => $question]);
+
+        foreach ($answers as $answer) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($answer);
+            $em->flush();
+        }
     }
 
     /**
@@ -95,7 +123,7 @@ class QuestionController extends Controller
         /** @var User $currentUser */
         $currentUser = $this->getUser();
 
-        if (!$currentUser->isAuthor($question) && !$currentUser->isAdmin()) {
+        if ( !$currentUser->isAuthorOnQuestion($question) && !$currentUser->isAdmin()) {
             return $this->redirectToRoute("forum_index");
         }
 
@@ -141,9 +169,11 @@ class QuestionController extends Controller
         /** @var User $currentUser */
         $currentUser = $this->getUser();
 
-        if (!$currentUser->isAuthor($question) && !$currentUser->isAdmin()) {
+        if ( !$currentUser->isAuthorOnQuestion($question) && !$currentUser->isAdmin()) {
             return $this->redirectToRoute("forum_index");
         }
+
+        $this->deleteAnswersByQuestion($question);
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($question);
@@ -174,12 +204,12 @@ class QuestionController extends Controller
 
 
     /**
-     * @Route("/questions/switch_like/{id}", name ="switch_like")
+     * @Route("/questions/switch_question_like/{id}", name ="switch_question_like")
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function switchLike($id)
+    public function switchQuestionLike($id)
     {
         $question = $this->getDoctrine()
             ->getRepository("TechForumBundle:Question")
@@ -188,7 +218,7 @@ class QuestionController extends Controller
         /** @var User $currentUser */
         $currentUser = $this->getUser();
 
-        if ($currentUser->isAuthor($question)) {
+        if ($currentUser->isAuthorOnQuestion($question)) {
             return $this->redirectToRoute('forum_index');
         }
 

@@ -62,6 +62,13 @@ class User implements UserInterface
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="TechForumBundle\Entity\Answer", mappedBy="author")
+     */
+    private $answers;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\ManyToMany(targetEntity="TechForumBundle\Entity\Role")
      * @ORM\JoinTable(name="users_roles",
      *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -77,10 +84,18 @@ class User implements UserInterface
      */
     private $likedQuestions;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="TechForumBundle\Entity\Answer", mappedBy="likers")
+     */
+    private $likedAnswers;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
         $this->roles = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     /**
@@ -256,6 +271,25 @@ class User implements UserInterface
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getAnswers(): ArrayCollection
+    {
+        return $this->answers;
+    }
+
+    /**
+     * @param Answer $answer
+     * @return User
+     */
+    public function addAnswer(Answer $answer)
+    {
+        $this->answers[] = $answer;
+
+        return $this;
+    }
+
+    /**
      * @param Role $role
      * @return User
      */
@@ -270,9 +304,18 @@ class User implements UserInterface
      * @param Question $question
      * @return bool
      */
-    public function isAuthor(Question $question)
+    public function isAuthorOnQuestion(Question $question)
     {
         return $question->getAuthor()->getId() === $this->getId();
+    }
+
+    /**
+     * @param Answer $answer
+     * @return bool
+     */
+    public function isAuthorOnAnswer(Answer $answer)
+    {
+        return $answer->getAuthor()->getId() === $this->getId();
     }
 
     /**
@@ -297,6 +340,22 @@ class User implements UserInterface
     public function setLikedQuestions($likedQuestions)
     {
         $this->likedQuestions = $likedQuestions;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getLikedAnswers(): ArrayCollection
+    {
+        return $this->likedAnswers;
+    }
+
+    /**
+     * @param ArrayCollection $likedAnswers
+     */
+    public function setLikedAnswers(ArrayCollection $likedAnswers): void
+    {
+        $this->likedAnswers = $likedAnswers;
     }
 }
 

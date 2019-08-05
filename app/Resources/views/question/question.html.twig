@@ -8,11 +8,11 @@
             {% if app.user and (app.user != question.author)%}
                 {% if question.isLikedBy(app.user) %}
                     <p class = "switch_like">
-                        <a href="{{ path('switch_like', {id: question.id}) }}">Dislike</a>
+                        <a href="{{ path('switch_question_like', {id: question.id}) }}">Dislike</a>
                     </p>
                 {% else %}
                     <p class = "switch_like">
-                        <a href="{{ path('switch_like', {id: question.id}) }}">Like</a>
+                        <a href="{{ path('switch_question_like', {id: question.id}) }}">Like</a>
                     </p>
                 {% endif %}
             {% endif %}
@@ -22,7 +22,7 @@
                 Author: {{ question.author.fullName }}
             </p>
 
-            {% if app.getUser() and (app.getUser().isAuthor(question) or app.getUser().isAdmin()) %}
+            {% if app.getUser() and (app.getUser().isAuthorOnQuestion(question) or app.getUser().isAdmin()) %}
             <a class = "btn btn-success" href = "{{ path('question_edit', {id: question.id}) }}">Edit</a>
             <a class = "btn btn-danger delete-btn" data-toggle="modal" data-target="#deleteModal" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
             {% endif %}
@@ -45,6 +45,35 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class = "col-md-8">
+        <form name="answer" action="{{ path('answer_question', {id: question.id}) }}" method="post">
+            <div class="form-group">
+                <label for="answer_content">Content</label>
+                <textarea class="form-control" rows = "3" name ="answer[content]" required> </textarea>
+            </div>
+            <button type="submit" class="btn btn-primary answer-btn">Answer</button>
+        </form>
+        {{  form_row(form._token) }}
+    </div>
+    <div>
+        {% for answer in answers %}
+            <div class = "col-md-11 answer">
+                <p class = "answer-content">{{ answer.content }}</p>
+                {% if app.user and (app.user != answer.author)%}
+                    {% if answer.isLikedBy(app.user) %}
+                        <p class = "switch_like">
+                            <a href="{{ path('switch_answer_like', {id: answer.id}) }}">Dislike</a>
+                        </p>
+                    {% else %}
+                        <p class = "switch_like">
+                            <a href="{{ path('switch_answer_like', {id: answer.id}) }}">Like</a>
+                        </p>
+                    {% endif %}
+                {% endif %}
+                <p class = "answer-author">Author: {{ answer.author.fullName }}</p>
+            </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

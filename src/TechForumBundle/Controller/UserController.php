@@ -48,6 +48,5 @@ class UserController extends Controller
         $form->handleRequest($request);
         $this->userService->save($user);
         return $this->redirectToRoute('security_login');
-
     }
 }
