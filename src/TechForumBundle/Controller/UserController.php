@@ -7,6 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use TechForumBundle\Entity\User;
+use TechForumBundle\Form\EditUserType;
+use TechForumBundle\Form\UserEditType;
 use TechForumBundle\Form\UserType;
 use TechForumBundle\Service\Users\UserServiceInterface;
 
@@ -46,8 +48,11 @@ class UserController extends Controller
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-        $this->userService->save($user);
-        return $this->redirectToRoute('security_login');
+        if ($form->isValid()) {
+            $this->userService->save($user);
+            return $this->redirectToRoute('security_login');
+        }
+        return $this->redirectToRoute("user_register");
     }
 
     /**
@@ -66,5 +71,45 @@ class UserController extends Controller
 
         return $this->render("users/profile.html.twig",
             ['user' => $user]);
+    }
+
+    /**
+     * @Route("/user/edit", name = "user_edit", methods={"GET"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function edit()
+    {
+        $currUser = $this->getUser();
+
+        return $this->render("users/edit.html.twig",
+            [
+                'user' => $currUser,
+                'form' => $this->createForm(UserType::class)->createView()
+            ]);
+    }
+
+    /**
+     * @Route("/user/edit", methods={"POST"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editProcess(Request $request)
+    {
+        /** @var User $currUser */
+        $currUser = $this->getUser();
+        $form = $this->createForm(UserType::class, $currUser);
+        $form->remove('password');
+        $form->handleRequest($request);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->merge($currUser);
+        $em->flush();
+
+        return $this->redirectToRoute('user_profile',
+            ['id' => $currUser->getId()]);
     }
 }

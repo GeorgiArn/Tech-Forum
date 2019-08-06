@@ -19,10 +19,7 @@
         </div>
         {% if app.getUser() and (app.getUser().id == user.id) %}
             <div class = "edit-prof-btn">
-                <a class = "btn btn-info" href = "#">Edit Profile</a>
-            </div>
-            <div class = "delete-prof-btn">
-                <a class = "btn btn-danger" href = "#">Delete Profile</a>
+                <a class = "btn btn-info" href = "{{ path('user_edit') }}">Edit Profile</a>
             </div>
         {% endif %}
         <div class = "back-btn">
