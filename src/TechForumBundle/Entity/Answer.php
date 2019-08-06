@@ -53,6 +53,13 @@ class Answer
     private $dateAdded;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_verified", type="boolean", nullable=false)
+     */
+    private $isVerified;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="TechForumBundle\Entity\User")
@@ -66,6 +73,7 @@ class Answer
     public function __construct()
     {
         $this->dateAdded = new \DateTime('now');
+        $this->isVerified = false;
     }
 
     /**
@@ -120,7 +128,6 @@ class Answer
 
         return $this;
     }
-
 
     /**
      * @return Question
@@ -217,5 +224,21 @@ class Answer
             }
         }
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    /**
+     * @param bool $isVerified
+     */
+    public function setIsVerified(bool $isVerified): void
+    {
+        $this->isVerified = $isVerified;
     }
 }

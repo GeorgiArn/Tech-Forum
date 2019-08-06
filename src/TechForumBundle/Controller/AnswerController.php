@@ -10,6 +10,7 @@ use TechForumBundle\Entity\Answer;
 use TechForumBundle\Entity\Question;
 use TechForumBundle\Entity\User;
 use TechForumBundle\Form\AnswerType;
+use TechForumBundle\Repository\AnswerRepository;
 
 class AnswerController extends Controller
 {
@@ -46,6 +47,7 @@ class AnswerController extends Controller
 
     /**
      * @Route("/questions/switch_answer_like/{id}", name ="switch_answer_like")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -55,6 +57,10 @@ class AnswerController extends Controller
         $answer = $this->getDoctrine()
             ->getRepository("TechForumBundle:Answer")
             ->find($id);
+
+        if ($answer === null) {
+            return $this->redirectToRoute('forum_index');
+        }
 
         /** @var User $currentUser */
         $currentUser = $this->getUser();
@@ -71,6 +77,43 @@ class AnswerController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $em->merge($answer);
+        $em->flush();
+
+        return $this->redirectToRoute('question_view', ['id' => $answer->getQuestion()->getId()]);
+    }
+
+    /**
+     * @Route("/switch_verfication/{id}", name = "switch_verification")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param int $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function switchVerification(int $id)
+    {
+        /** @var User $currUser */
+        $currUser = $this->getUser();
+
+        if (!$currUser->isAdmin()) {
+            return $this->redirectToRoute('forum_index');
+        }
+
+        $answer = $this->getDoctrine()
+            ->getRepository("TechForumBundle:Answer")
+            ->find($id);
+
+        if ($answer === null) {
+            return $this->redirectToRoute('forum_index');
+        }
+
+        if ($answer->isVerified()) {
+            $answer->setIsVerified(false);
+        } else {
+            $answer->setIsVerified(true);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($answer);
         $em->flush();
 
         return $this->redirectToRoute('question_view', ['id' => $answer->getQuestion()->getId()]);

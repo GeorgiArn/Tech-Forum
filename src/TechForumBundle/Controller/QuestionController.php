@@ -205,6 +205,7 @@ class QuestionController extends Controller
 
     /**
      * @Route("/questions/switch_question_like/{id}", name ="switch_question_like")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -214,6 +215,10 @@ class QuestionController extends Controller
         $question = $this->getDoctrine()
             ->getRepository("TechForumBundle:Question")
             ->find($id);
+
+        if ($question === null) {
+            return $this->redirectToRoute('forum_index');
+        }
 
         /** @var User $currentUser */
         $currentUser = $this->getUser();

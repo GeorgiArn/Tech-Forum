@@ -57,7 +57,7 @@ body {
 }
 
 .answer-author {
-  text-align: right;
+  margin-top: 15px;
 }
 
 .answer {
