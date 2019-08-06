@@ -273,7 +273,7 @@ class User implements UserInterface
     /**
      * @return ArrayCollection
      */
-    public function getAnswers(): ArrayCollection
+    public function getAnswers()
     {
         return $this->answers;
     }
@@ -345,7 +345,7 @@ class User implements UserInterface
     /**
      * @return ArrayCollection
      */
-    public function getLikedAnswers(): ArrayCollection
+    public function getLikedAnswers()
     {
         return $this->likedAnswers;
     }

@@ -66,3 +66,21 @@ body {
   padding-bottom: 10px;
   margin-top: 20px;
 }
+
+.user-profile {
+    margin-top: 40px;
+}
+
+.user-info {
+  text-align: center;
+  font-size: 20px;
+}
+
+.stats {
+  text-align: center;
+  font-size: 17px;
+}
+
+.btn {
+  margin-left: 10px;
+}

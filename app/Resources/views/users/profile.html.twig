@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class = "container">
+    <div class = "user-profile row">
+        <div class = "col-md-6 user-info">
+            <p class="username">Username: <b>{{ user.username }}</b></p>
+            <p class="email">Email: <b>{{ user.email }}</b></p>
+            <p class="fullName">Full Name: <b>{{ user.fullName }}</b></p>
+        </div>
+        <div class = "col-md-6 stats">
+            <p>Questions Asked: <b>{{ user.questions|length }}</b></p>
+            <p>Answers: <b>{{ user.answers|length }}</b></p>
+            <p>Liked Questions: <b>{{ user.likedQuestions|length }}</b></p>
+            <p>Liked Answers: <b>{{ user.likedAnswers|length }}</b></p>
+        </div>
+        <div class = "full-stats-btn">
+            <a class = "btn btn-primary" href = "#">View Full Statistics</a>
+        </div>
+        {% if app.getUser() and (app.getUser().id == user.id) %}
+            <div class = "edit-prof-btn">
+                <a class = "btn btn-info" href = "#">Edit Profile</a>
+            </div>
+            <div class = "delete-prof-btn">
+                <a class = "btn btn-danger" href = "#">Delete Profile</a>
+            </div>
+        {% endif %}
+        <div class = "back-btn">
+            <a class = "btn btn-secondary" href="{{ path('forum_index') }}">Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
