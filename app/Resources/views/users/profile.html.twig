@@ -14,10 +14,10 @@
             <p>Liked Questions: <b>{{ user.likedQuestions|length }}</b></p>
             <p>Liked Answers: <b>{{ user.likedAnswers|length }}</b></p>
         </div>
-        <div class = "full-stats-btn">
-            <a class = "btn btn-primary" href = "#">View Full Statistics</a>
-        </div>
         {% if app.getUser() and (app.getUser().id == user.id) %}
+            <div class = "my-questions-btn">
+                <a class = "btn btn-primary" href = "{{ path('my_questions') }}">My Questions</a>
+            </div>
             <div class = "edit-prof-btn">
                 <a class = "btn btn-info" href = "{{ path('user_edit') }}">Edit Profile</a>
             </div>

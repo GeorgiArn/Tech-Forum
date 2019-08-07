@@ -7,9 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use TechForumBundle\Entity\User;
-use TechForumBundle\Form\EditUserType;
-use TechForumBundle\Form\UserEditType;
 use TechForumBundle\Form\UserType;
+use TechForumBundle\Repository\UserRepository;
 use TechForumBundle\Service\Users\UserServiceInterface;
 
 class UserController extends Controller
@@ -111,5 +110,21 @@ class UserController extends Controller
 
         return $this->redirectToRoute('user_profile',
             ['id' => $currUser->getId()]);
+    }
+
+    /**
+     * @Route("/leaderboard", name="leaderboard")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function leaderboard()
+    {
+        $users = $this
+            ->getDoctrine()
+            ->getRepository("TechForumBundle:User")
+            ->findAll();
+
+        return $this->render('users/leaderboard.html.twig',
+            ['users' => $users]);
     }
 }

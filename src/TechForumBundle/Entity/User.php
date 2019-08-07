@@ -357,5 +357,34 @@ class User implements UserInterface
     {
         $this->likedAnswers = $likedAnswers;
     }
+
+    public function getTotalQuestionsLikes()
+    {
+        $totalLikes = 0;
+        foreach ($this->getQuestions() as $question) {
+            $totalLikes += count($question->getLikers());
+        }
+        return $totalLikes;
+    }
+
+    public function getTotalAnswersLikes()
+    {
+        $totalLikes = 0;
+        foreach ($this->getAnswers() as $answer) {
+            $totalLikes += count($answer->getLikers());
+        }
+        return $totalLikes;
+    }
+
+    public function getVerifiedAnswers()
+    {
+        $verifiedAnswers = 0;
+        foreach ($this->getAnswers() as $answer) {
+            if ($answer->isVerified()) {
+                $verifiedAnswers++;
+            }
+        }
+        return $verifiedAnswers;
+    }
 }
 

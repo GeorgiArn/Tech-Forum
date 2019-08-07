@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class = "container">
+        <h2 class="leaderboard-title text-center">Top Supporters</h2>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col" class="text-center">Username</th>
+                <th scope="col" class="text-center">Verified Answers</th>
+                <th scope="col" class="text-center">Total Answers Likes</th>
+                <th scope="col" class="text-center">Total Questions Likes</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td class = "text-center"><a href = {{ path('user_profile', {'id' : user.id}) }}> {{ user.username }}</a></td>
+                    <td class = "text-center">{{ user.verifiedAnswers }}</td>
+                    <td class = "text-center">{{ user.totalAnswersLikes }}</td>
+                    <td class = "text-center">{{ user.totalQuestionsLikes }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
