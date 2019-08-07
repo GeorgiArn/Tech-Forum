@@ -192,7 +192,7 @@ class QuestionController extends Controller
     {
         $questions = $this
             ->getDoctrine()
-            ->getRepository(Question::class)
+            ->getRepository("TechForumBundle:Question")
             ->findBy(['author' => $this->getUser()]);
 
 
@@ -239,4 +239,5 @@ class QuestionController extends Controller
 
         return $this->redirectToRoute('question_view', ['id' => $question->getId()]);
     }
+
 }

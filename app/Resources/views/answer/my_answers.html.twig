@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class = "container">
+        <div class = "row answers-list">
+            {% for answer in answers %}
+                <div class = "col-md-12 col-sm-12 answer">
+                    <p class = "answer-content">{{ answer.content }}</p>
+                    <div class = "read-more-btn">
+                        <a class = "btn btn-primary" href = "{{ path('question_view', {'id': answer.question.id}) }}">View</a>
+                        <a class = "btn btn-success" href = "{{ path('edit_answer', {id: answer.id}) }}">Edit</a>
+                        <a class = "btn btn-danger" href="{{ path('answer_delete', {id: answer.id}) }}">Delete Answer</a>
+                    </div>
+                </div>
+            {% endfor %}
+            <a class = "btn btn-secondary" href = "{{ path('forum_index')}}">Back</a>
+        </div>
+    </div>
+{% endblock %}
+
