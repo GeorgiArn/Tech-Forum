@@ -10,11 +10,11 @@
                     <p class = "question-category">Category: {{ question.category.name }}</p>
                     <div class = "read-more-btn">
                         <a class = "btn btn-success" href = "{{ path('question_edit', {id: question.id}) }}">Edit</a>
-                        <a class = "btn btn-danger delete-btn" data-toggle="modal" data-target="#deleteModal" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
+                        <a class = "btn btn-danger delete-btn" data-toggle="modal" data-target="#deleteModal{{ question.id }}" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
                     </div>
                 </div>
 
-                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+                <div class="modal fade" id="deleteModal{{ question.id }}" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">

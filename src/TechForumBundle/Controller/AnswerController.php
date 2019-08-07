@@ -118,4 +118,45 @@ class AnswerController extends Controller
 
         return $this->redirectToRoute('question_view', ['id' => $answer->getQuestion()->getId()]);
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     *
+     * @Route("/edit/answer/{id}", name="edit_answer")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editAnswer(Request $request, int $id)
+    {
+        $answer = $this->getDoctrine()
+            ->getRepository("TechForumBundle:Answer")
+            ->find($id);
+
+        if (!$this->getUser()->isAuthorOnAnswer($answer)
+        && (!$this->getUser()->isAdmin())) {
+            return $this->redirectToRoute('forum_index');
+        }
+
+        $form = $this->createForm(AnswerType::class, $answer);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->merge($answer);
+            $em->flush();
+
+            return $this->redirectToRoute('question_view',
+                [
+                    'id' => $answer->getQuestion()->getId()
+                ]);
+        }
+
+        return $this->render('answer/edit.html.twig',
+            [
+                'answer' => $answer,
+                'form' => $form->createView()
+            ]);
+    }
 }

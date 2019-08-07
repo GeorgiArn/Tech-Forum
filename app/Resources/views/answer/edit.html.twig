@@ -1,0 +1,16 @@
+{% extends 'base.html.twig'%}
+
+{% block body %}
+    <h2 class = "text-center edit-answer-title">Edit Answer</h2>
+    <div class = "container col-md-6 edit-form">
+        <form name="edit" action="{{ path('edit_answer', {id: answer.id}) }}" method="post">
+            <div class="form-group">
+                <label for="answer_content">Content</label>
+                <textarea class="form-control" rows = "3" name ="answer[content]" required>{{ answer.content }} </textarea>
+            </div>
+            <a class = "btn btn-secondary" href = "{{ path('question_view', {'id': answer.question.id}) }}">Cancel</a>
+            <button type="submit" class="btn btn-primary edit-answer-btn">Edit Answer</button>
+            {{  form_row(form._token) }}
+        </form>
+    </div>
+{% endblock %}

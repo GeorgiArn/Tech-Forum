@@ -1,106 +1,108 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class ="container">
-    <div class ="row">
-        <div class = "col-md-12 question">
-            <h2 class = "question-title">{{ question.title }}</h2>
-            {% if app.user and (app.user != question.author)%}
-                {% if question.isLikedBy(app.user) %}
-                    <p class = "switch_like">
-                        <a href="{{ path('switch_question_like', {id: question.id}) }}">Dislike</a>
-                    </p>
-                {% else %}
-                    <p class = "switch_like">
-                        <a href="{{ path('switch_question_like', {id: question.id}) }}">Like</a>
-                    </p>
+    <div class ="container">
+        <div class ="row">
+            <div class = "col-md-12 question">
+                <h2 class = "question-title">{{ question.title }}</h2>
+                {% if app.user and (app.user != question.author)%}
+                    {% if question.isLikedBy(app.user) %}
+                        <p class = "switch_like">
+                            <a href="{{ path('switch_question_like', {id: question.id}) }}">Dislike</a>
+                        </p>
+                    {% else %}
+                        <p class = "switch_like">
+                            <a href="{{ path('switch_question_like', {id: question.id}) }}">Like</a>
+                        </p>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-            <p class = "question-description">{{ question.description }}</p>
-            <p class = "question-category">Category: {{ question.category.name }}</p>
-            <p class = "question-author">
-                Author: {{ question.author.fullName }}
-            </p>
+                <p class = "question-description">{{ question.description }}</p>
+                <p class = "question-category">Category: {{ question.category.name }}</p>
+                <p class = "question-author">
+                    Author: {{ question.author.fullName }}
+                </p>
 
-            {% if app.getUser() and (app.getUser().isAuthorOnQuestion(question) or app.getUser().isAdmin()) %}
-            <a class = "btn btn-success" href = "{{ path('question_edit', {id: question.id}) }}">Edit</a>
-            <a class = "btn btn-danger delete-btn" data-toggle="modal" data-target="#deleteModal" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
-            {% endif %}
-            <a class = "btn btn-secondary" href = "{{ path('forum_index') }}">Back</a>
+                {% if app.getUser() and (app.getUser().isAuthorOnQuestion(question) or app.getUser().isAdmin()) %}
+                    <a class = "btn btn-success" href = "{{ path('question_edit', {id: question.id}) }}">Edit</a>
+                    <a class = "btn btn-danger delete-btn" data-toggle="modal" data-target="#deleteModal" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
+                {% endif %}
+                <a class = "btn btn-secondary" href = "{{ path('forum_index') }}">Back</a>
 
-            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5>Delete question</h5>
-                        </div>
-                        <div class="modal-body">
-                            Are you sure you want to delete this question?
-                        </div>
-                        <div class="modal-footer">
-                            <a type="button" class="btn btn-secondary cancel-delete-btn" data-dismiss="modal" href = "{{ path('question_view', {'id': question.id}) }}">Cancel</a>
-                            <a type="button" class="btn btn-danger" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
+                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5>Delete question</h5>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete this question?
+                            </div>
+                            <div class="modal-footer">
+                                <a type="button" class="btn btn-secondary cancel-delete-btn" data-dismiss="modal" href = "{{ path('question_view', {'id': question.id}) }}">Cancel</a>
+                                <a type="button" class="btn btn-danger" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class = "col-md-8">
-        <form name="answer" action="{{ path('answer_question', {id: question.id}) }}" method="post">
-            <div class="form-group">
-                <label for="answer_content">Content</label>
-                <textarea class="form-control" rows = "3" name ="answer[content]" required> </textarea>
-            </div>
-            <button type="submit" class="btn btn-primary answer-btn">Answer</button>
-        </form>
-        {{  form_row(form._token) }}
-    </div>
-    <div>
-        {% for answer in answers %}
-            <div class = "col-md-12 answer">
-                <div class = "row">
-                    <div class = "col-md-6">
-                        <p class = "answer-content">{{ answer.content }}</p>
-                        {% if app.user and (app.user != answer.author)%}
-                            {% if answer.isLikedBy(app.user) %}
-                                <p class = "switch_like">
-                                    <a href="{{ path('switch_answer_like', {id: answer.id}) }}">Dislike</a>
-                                </p>
-                            {% else %}
-                                <p class = "switch_like">
-                                    <a href="{{ path('switch_answer_like', {id: answer.id}) }}">Like</a>
-                                </p>
+        <div class = "col-md-8">
+            <form name="answer" action="{{ path('answer_question', {id: question.id}) }}" method="post">
+                <div class="form-group">
+                    <label for="answer_content">Content</label>
+                    <textarea class="form-control" rows = "3" name ="answer[content]" required> </textarea>
+                </div>
+                <button type="submit" class="btn btn-primary answer-btn">Answer</button>
+            </form>
+            {{  form_row(form._token) }}
+        </div>
+        <div>
+            {% for answer in answers %}
+                <div class = "col-md-12 answer">
+                    <div class = "row">
+                        <div class = "col-md-6">
+                            <p class = "answer-content">{{ answer.content }}</p>
+                            {% if app.user and (app.user != answer.author)%}
+                                {% if answer.isLikedBy(app.user) %}
+                                    <p class = "switch_like">
+                                        <a href="{{ path('switch_answer_like', {id: answer.id}) }}">Dislike</a>
+                                    </p>
+                                {% else %}
+                                    <p class = "switch_like">
+                                        <a href="{{ path('switch_answer_like', {id: answer.id}) }}">Like</a>
+                                    </p>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                        <p class = "likes-amount">Likes: {{ answer.likers|length }}</p>
-                    </div>
-                    <div class = "col-md-6">
-                        {% if answer.isVerified %}
-                            <div class = "text-center">
-                                <img src = "https://png.icons8.com/ios/1600/007AFF/verified-account"
-                                     width="70px"
-                                     height="70px"
-                                     alt = "verified-answer">
-                            </div>
-                        {% endif %}
-                        {% if app.user and (app.user.isAdmin)%}
+                            <p class = "likes-amount">Likes: {{ answer.likers|length }}</p>
+                            {% if app.user.isAuthorOnAnswer(answer) or app.user.isAdmin() %}
+                                <a class = "btn btn-success" href="{{ path('edit_answer', {id: answer.id}) }}">Edit Answer</a>
+                            {% endif %}
+                        </div>
+                        <div class = "col-md-6">
                             {% if answer.isVerified %}
-                                <p class = "switch_verification text-center">
-                                    <a href="{{ path('switch_verification', {id: answer.id}) }}">Unverify</a>
-                                </p>
-                            {% else %}
-                                <p class = "switch_verification text-center">
-                                    <a href="{{ path('switch_verification', {id: answer.id}) }}">Verify</a>
-                                </p>
+                                <div class = "text-center">
+                                    <img src = "https://png.icons8.com/ios/1600/007AFF/verified-account"
+                                         width="70px"
+                                         height="70px"
+                                         alt = "verified-answer">
+                                </div>
                             {% endif %}
-                        {% endif %}
-                        <p class = "text-center answer-author">Author: {{ answer.author.fullName }}</p>
+                            {% if app.user and (app.user.isAdmin)%}
+                                {% if answer.isVerified %}
+                                    <p class = "switch_verification text-center">
+                                        <a href="{{ path('switch_verification', {id: answer.id}) }}">Unverify</a>
+                                    </p>
+                                {% else %}
+                                    <p class = "switch_verification text-center">
+                                        <a href="{{ path('switch_verification', {id: answer.id}) }}">Verify</a>
+                                    </p>
+                                {% endif %}
+                            {% endif %}
+                            <p class = "text-center answer-author">Author: {{ answer.author.fullName }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
-</div>
 {% endblock %}
-
