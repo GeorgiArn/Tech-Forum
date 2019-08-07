@@ -74,8 +74,11 @@
                                 {% endif %}
                             {% endif %}
                             <p class = "likes-amount">Likes: {{ answer.likers|length }}</p>
-                            {% if app.user.isAuthorOnAnswer(answer) or app.user.isAdmin() %}
+                            {% if app.user and (app.user.isAuthorOnAnswer(answer) or app.user.isAdmin()) %}
                                 <a class = "btn btn-success" href="{{ path('edit_answer', {id: answer.id}) }}">Edit Answer</a>
+                            {% endif %}
+                            {% if app.user and (app.user.isAuthorOnAnswer(answer) or app.user.isAdmin()) %}
+                                <a class = "btn btn-danger" href="{{ path('answer_delete', {id: answer.id}) }}">Delete Answer</a>
                             {% endif %}
                         </div>
                         <div class = "col-md-6">

@@ -116,7 +116,8 @@ class AnswerController extends Controller
         $em->persist($answer);
         $em->flush();
 
-        return $this->redirectToRoute('question_view', ['id' => $answer->getQuestion()->getId()]);
+        return $this->redirectToRoute('question_view',
+            ['id' => $answer->getQuestion()->getId()]);
     }
 
     /**
@@ -139,6 +140,10 @@ class AnswerController extends Controller
             return $this->redirectToRoute('forum_index');
         }
 
+        if ($answer === null) {
+            return $this->redirectToRoute('forum_index');
+        }
+
         $form = $this->createForm(AnswerType::class, $answer);
         $form->handleRequest($request);
 
@@ -158,5 +163,39 @@ class AnswerController extends Controller
                 'answer' => $answer,
                 'form' => $form->createView()
             ]);
+    }
+
+    /**
+     *
+     * @Route("answer/delete/{id}", name = "answer_delete")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteAnswer($id)
+    {
+
+        $answer = $this->getDoctrine()
+            ->getRepository("TechForumBundle:Answer")
+            ->find($id);
+
+        if ($answer === null) {
+            return $this->redirectToRoute('forum_index');
+        }
+
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        if (!$currentUser->isAuthorOnAnswer($answer) && !$currentUser->isAdmin()) {
+            return $this->redirectToRoute("forum_index");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($answer);
+        $em->flush();
+
+        return $this->redirectToRoute('question_view',
+            ['id' => $answer->getQuestion()->getId()]);
     }
 }
