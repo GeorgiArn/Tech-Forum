@@ -2,6 +2,10 @@
 
 namespace TechForumBundle\Repository;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping;
+use TechForumBundle\Entity\Category;
+
 /**
  * CategoryRepository
  *
@@ -10,14 +14,14 @@ namespace TechForumBundle\Repository;
  */
 class CategoryRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getAllCategories()
+    public function __construct(EntityManagerInterface $em,
+                                Mapping\ClassMetadata $metadata = null)
     {
-        return
-        $this
-            ->createQueryBuilder('category')
-            ->orderBy('category.name','ASC')
-            ->getQuery()
-            ->getResult();
+        parent::__construct ($em,
+            $metadata == null ?
+                new Mapping\ClassMetadata(Category::class) :
+                $metadata
+        );
     }
 
 }

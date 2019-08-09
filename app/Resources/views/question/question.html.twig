@@ -6,7 +6,7 @@
             <div class = "col-md-12 question">
                 <h2 class = "question-title">{{ question.title }}</h2>
                 {% if app.user and (app.user != question.author)%}
-                    {% if question.isLikedBy(app.user) %}
+                    {% if question.likedBy(app.user) %}
                         <p class = "switch_like">
                             <a href="{{ path('switch_question_like', {id: question.id}) }}">Dislike</a>
                         </p>

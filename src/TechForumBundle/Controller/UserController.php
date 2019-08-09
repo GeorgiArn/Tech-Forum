@@ -4,11 +4,12 @@ namespace TechForumBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use TechForumBundle\Entity\User;
 use TechForumBundle\Form\UserType;
-use TechForumBundle\Repository\UserRepository;
 use TechForumBundle\Service\Users\UserServiceInterface;
 
 class UserController extends Controller
@@ -25,10 +26,9 @@ class UserController extends Controller
 
     /**
      * @Route("/register", name="user_register", methods={"GET"})
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function register(Request $request)
+    public function register()
     {
         return $this->render('users/register.html.twig',
             [
@@ -40,7 +40,7 @@ class UserController extends Controller
     /**
      * @Route("/register", methods={"POST"})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function registerProcess(Request $request)
     {
@@ -59,14 +59,11 @@ class UserController extends Controller
      * @param int $id
      *
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function profile(int $id)
     {
-        $user = $this
-            ->getDoctrine()
-            ->getRepository("TechForumBundle:User")
-            ->find($id);
+        $user = $this->userService->userById($id);
 
         return $this->render("users/profile.html.twig",
             ['user' => $user]);
@@ -76,11 +73,11 @@ class UserController extends Controller
      * @Route("/user/edit", name = "user_edit", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function edit()
     {
-        $currUser = $this->getUser();
+        $currUser = $this->userService->currentUser();
 
         return $this->render("users/edit.html.twig",
             [
@@ -94,35 +91,33 @@ class UserController extends Controller
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editProcess(Request $request)
     {
-        /** @var User $currUser */
-        $currUser = $this->getUser();
+        $currUser = $this->userService->currentUser();
+
         $form = $this->createForm(UserType::class, $currUser);
         $form->remove('password');
         $form->handleRequest($request);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->merge($currUser);
-        $em->flush();
-
-        return $this->redirectToRoute('user_profile',
+        if ($form->isValid()) {
+            $this->userService->edit($currUser);
+            return $this->redirectToRoute('user_profile',
+                ['id' => $currUser->getId()]);
+        }
+        return $this->redirectToRoute('user_edit',
             ['id' => $currUser->getId()]);
     }
 
     /**
      * @Route("/leaderboard", name="leaderboard")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function leaderboard()
     {
-        $users = $this
-            ->getDoctrine()
-            ->getRepository("TechForumBundle:User")
-            ->findAll();
+        $users = $this->userService->getAll();
 
         return $this->render('users/leaderboard.html.twig',
             ['users' => $users]);

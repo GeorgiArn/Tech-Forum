@@ -3,6 +3,7 @@
 
 namespace TechForumBundle\Service\Users;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Security;
 use TechForumBundle\Entity\Role;
 use TechForumBundle\Entity\User;
@@ -52,5 +53,31 @@ class UserService implements UserServiceInterface
     public function currentUser(): ?User
     {
         return $this->security->getUser();
+    }
+
+    /**
+     * @param int $id
+     * @return User|null|object
+     */
+    public function userById(int $id): ?User
+    {
+        return $this->userRepository->find($id);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function edit(User $user): bool
+    {
+        return $this->userRepository->merge($user);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAll(): array
+    {
+        return $this->userRepository->findAll();
     }
 }

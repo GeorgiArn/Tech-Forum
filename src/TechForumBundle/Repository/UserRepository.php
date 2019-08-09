@@ -26,11 +26,32 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             );
     }
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function insert(User $user) : bool
     {
         try {
             $this->_em->persist($user);
             $this->_em->flush ();
+            return true;
+        } catch ( OptimisticLockException $e ) {
+            return false;
+        } catch ( ORMException $e ) {
+            return false;
+        }
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function merge(User $user) : bool
+    {
+        try {
+            $this->_em->merge($user);
+            $this->_em->flush();
             return true;
         } catch ( OptimisticLockException $e ) {
             return false;

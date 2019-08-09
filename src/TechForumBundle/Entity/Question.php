@@ -220,35 +220,11 @@ class Question
 
     /**
      * @param User $user
-     *
-     * @return $this
-     */
-    public function addLike(User $user)
-    {
-        $this->likers[] = $user;
-
-        return $this;
-    }
-
-    /**
-     * @param User $user
-     *
-     * @return $this
-     */
-    public function removeLike(User $user)
-    {
-        $this->likers->removeElement($user);
-
-        return $this;
-    }
-
-    /**
-     * @param User $user
      * @return bool
      */
     public function isLikedBy(User $user)
     {
-        foreach ($this->getLikers () as $liker) {
+        foreach ($this->getLikers() as $liker) {
             if ($user->getId () === $liker->getId()) {
                 return true;
             }

@@ -181,38 +181,6 @@ class Answer
     }
 
     /**
-     * @param ArrayCollection $likers
-     */
-    public function setLikers($likers)
-    {
-        $this->likers = $likers;
-    }
-
-    /**
-     * @param User $user
-     *
-     * @return $this
-     */
-    public function addLike(User $user)
-    {
-        $this->likers[] = $user;
-
-        return $this;
-    }
-
-    /**
-     * @param User $user
-     *
-     * @return $this
-     */
-    public function removeLike(User $user)
-    {
-        $this->likers->removeElement($user);
-
-        return $this;
-    }
-
-    /**
      * @param User $user
      * @return bool
      */

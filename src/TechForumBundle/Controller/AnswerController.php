@@ -4,40 +4,51 @@ namespace TechForumBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use TechForumBundle\Entity\Answer;
 use TechForumBundle\Entity\Question;
 use TechForumBundle\Entity\User;
 use TechForumBundle\Form\AnswerType;
 use TechForumBundle\Repository\AnswerRepository;
+use TechForumBundle\Service\Answers\AnswerService;
+use TechForumBundle\Service\Questions\QuestionService;
+use TechForumBundle\Service\Users\UserService;
 
 class AnswerController extends Controller
 {
+    private $answerService;
+    private $questionService;
+    private $userService;
+
+    public function __construct(AnswerService $answerService,
+                                QuestionService $questionService,
+                                UserService $userService)
+    {
+        $this->answerService = $answerService;
+        $this->questionService = $questionService;
+        $this->userService = $userService;
+    }
 
     /**
-     * @param Request $request
-     * @param $id
-     *
      * @Route("/question/view/{id}", name="answer_question", methods={"POST"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int $id
+     *
+     * @return Response
      */
-    public function createAnswer(Request $request, $id)
+    public function create(Request $request, int $id)
     {
-        /** @var Question $question */
-        $question = $this->getDoctrine()->getRepository(Question::class)
-            ->find($id);
-
         $answer = new Answer();
+
         $form = $this->createForm(AnswerType::class, $answer);
         $form->handleRequest($request);
-        $answer->setAuthor($this->getUser());
-        $answer->setQuestion($question);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($answer);
-        $em->flush();
+
+        $this->answerService->create($answer, $id);
 
         return $this->redirectToRoute('question_view',
             [
@@ -49,37 +60,28 @@ class AnswerController extends Controller
      * @Route("/questions/switch_answer_like/{id}", name ="switch_answer_like")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @param int $id
+     * @return RedirectResponse
      */
-    public function switchAnswerLike($id)
+    public function switchAnswerLike(int $id)
     {
-        $answer = $this->getDoctrine()
-            ->getRepository("TechForumBundle:Answer")
-            ->find($id);
+        $answer = $this->answerService->answerById($id);
 
         if ($answer === null) {
             return $this->redirectToRoute('forum_index');
         }
 
-        /** @var User $currentUser */
-        $currentUser = $this->getUser();
+        $currentUser = $this->userService->currentUser();
 
         if ($currentUser->isAuthorOnAnswer($answer)) {
             return $this->redirectToRoute('forum_index');
         }
 
-        if ($answer->isLikedBy($currentUser)) {
-            $answer->removeLike($currentUser);
-        } else {
-            $answer->addLike($currentUser);
-        }
+        $this->answerService->switchLikes($answer);
+        $this->answerService->update($answer);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->merge($answer);
-        $em->flush();
-
-        return $this->redirectToRoute('question_view', ['id' => $answer->getQuestion()->getId()]);
+        return $this->redirectToRoute('question_view',
+            ['id' => $answer->getQuestion()->getId()]);
     }
 
     /**
@@ -87,70 +89,77 @@ class AnswerController extends Controller
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param int $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function switchVerification(int $id)
     {
-        /** @var User $currUser */
-        $currUser = $this->getUser();
+        $currUser = $this->userService->currentUser();
 
         if (!$currUser->isAdmin()) {
             return $this->redirectToRoute('forum_index');
         }
 
-        $answer = $this->getDoctrine()
-            ->getRepository("TechForumBundle:Answer")
-            ->find($id);
+        $answer = $this->answerService->answerById($id);
 
         if ($answer === null) {
             return $this->redirectToRoute('forum_index');
         }
 
-        if ($answer->isVerified()) {
-            $answer->setIsVerified(false);
-        } else {
-            $answer->setIsVerified(true);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($answer);
-        $em->flush();
+        $this->answerService->switchVerification($answer);
+        $this->answerService->update($answer);
 
         return $this->redirectToRoute('question_view',
             ['id' => $answer->getQuestion()->getId()]);
     }
 
     /**
-     * @param Request $request
-     * @param $id
+     * @param int $id
      *
-     * @Route("/edit/answer/{id}", name="edit_answer")
+     * @Route("/edit/answer/{id}", name="edit_answer", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
-    public function editAnswer(Request $request, int $id)
+    public function edit(int $id)
     {
-        $answer = $this->getDoctrine()
-            ->getRepository("TechForumBundle:Answer")
-            ->find($id);
-
-        if (!$this->getUser()->isAuthorOnAnswer($answer)
-        && (!$this->getUser()->isAdmin())) {
-            return $this->redirectToRoute('forum_index');
-        }
+        $answer = $this->answerService->answerById($id);
 
         if ($answer === null) {
             return $this->redirectToRoute('forum_index');
         }
 
+        $currentUser = $this->userService->currentUser();
+
+        if (!$currentUser->isAuthorOnAnswer($answer)
+            && (!$currentUser->isAdmin())) {
+            return $this->redirectToRoute('forum_index');
+        }
+
+        return $this->render('answer/edit.html.twig',
+            [
+                'answer' => $answer,
+                'form' => $this->createForm(AnswerType::class)->createView()
+            ]);
+    }
+
+    /**
+     * @param int $id
+     * @param Request $request
+     *
+     * @Route("/edit/answer/{id}", methods={"POST"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return RedirectResponse|Response
+     */
+    public function editProcess(int $id, Request $request)
+    {
+        $answer = $this->answerService->answerById($id);
+
         $form = $this->createForm(AnswerType::class, $answer);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->merge($answer);
-            $em->flush();
+        if ($form->isValid()) {
+            $this->answerService->update($answer);
 
             return $this->redirectToRoute('question_view',
                 [
@@ -170,52 +179,27 @@ class AnswerController extends Controller
      * @Route("answer/delete/{id}", name = "answer_delete")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @param int $id
+     * @return RedirectResponse
      */
-    public function deleteAnswer($id)
+    public function deleteAnswer(int $id)
     {
 
-        $answer = $this->getDoctrine()
-            ->getRepository("TechForumBundle:Answer")
-            ->find($id);
+        $answer = $this->answerService->answerById($id);
 
         if ($answer === null) {
             return $this->redirectToRoute('forum_index');
         }
 
-        /** @var User $currentUser */
-        $currentUser = $this->getUser();
+        $currentUser = $this->userService->currentUser();
 
         if (!$currentUser->isAuthorOnAnswer($answer) && !$currentUser->isAdmin()) {
             return $this->redirectToRoute("forum_index");
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($answer);
-        $em->flush();
+        $this->answerService->delete($answer);
 
         return $this->redirectToRoute('question_view',
             ['id' => $answer->getQuestion()->getId()]);
-    }
-
-    /**
-     * @Route("/answers/my_answers", name="my_answers")
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getAllAnswersByUser()
-    {
-        $answers = $this
-            ->getDoctrine()
-            ->getRepository("TechForumBundle:Answer")
-            ->findBy(['author' => $this->getUser()]);
-
-
-        return $this->render("answer/my_answers.html.twig",
-            [
-                'answers' => $answers,
-            ]);
     }
 }

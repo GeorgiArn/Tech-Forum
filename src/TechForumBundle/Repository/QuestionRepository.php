@@ -3,8 +3,10 @@
 namespace TechForumBundle\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use TechForumBundle\Entity\Question;
-use TechForumBundle\Entity\User;
 
 /**
  * QuestionRepository
@@ -14,4 +16,52 @@ use TechForumBundle\Entity\User;
  */
 class QuestionRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function __construct(EntityManagerInterface $em,
+                                Mapping\ClassMetadata $metadata = null)
+    {
+        parent::__construct ($em,
+            $metadata == null ?
+                new Mapping\ClassMetadata(Question::class) :
+                $metadata
+        );
+    }
+
+    public function insert(Question $question): bool
+    {
+        try {
+            $this->_em->persist($question);
+            $this->_em->flush();
+            return true;
+        } catch ( OptimisticLockException $e ) {
+            return false;
+        } catch ( ORMException $e ) {
+            return false;
+        }
+    }
+
+    public function merge(Question $question): bool
+    {
+        try {
+            $this->_em->merge($question);
+            $this->_em->flush();
+            return true;
+        } catch ( OptimisticLockException $e ) {
+            return false;
+        } catch ( ORMException $e ) {
+            return false;
+        }
+    }
+
+    public function remove(Question $question): bool
+    {
+        try {
+            $this->_em->remove($question);
+            $this->_em->flush();
+            return true;
+        } catch ( OptimisticLockException $e ) {
+            return false;
+        } catch ( ORMException $e ) {
+            return false;
+        }
+    }
 }
