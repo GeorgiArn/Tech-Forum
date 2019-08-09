@@ -69,6 +69,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->createQueryBuilder('user')
             ->addOrderBy('user.totalPoints', 'DESC')
             ->addOrderBy('user.username', 'ASC')
+            ->setMaxResults(10)
             ->getQuery()
             ->getResult();
 
