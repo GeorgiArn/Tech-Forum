@@ -130,4 +130,15 @@ class QuestionService implements QuestionServiceInterface
         }
         return true;
     }
+
+    public function getQuestionsByCurrentUser(): array
+    {
+        $currentUser = $this->userService->currentUser();
+
+        $questions = $this->questionRepository->findBy([
+            'author' => $currentUser
+        ]);
+
+        return $questions;
+    }
 }

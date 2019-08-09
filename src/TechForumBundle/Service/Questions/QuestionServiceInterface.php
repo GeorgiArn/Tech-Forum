@@ -18,4 +18,5 @@ interface QuestionServiceInterface
     public function removeLike(Question $question): bool;
     public function getAll(): array;
     public function switchLikes(Question $question): bool;
+    public function getQuestionsByCurrentUser(): array;
 }

@@ -6,6 +6,7 @@ namespace TechForumBundle\Service\Answers;
 
 use TechForumBundle\Entity\Answer;
 use TechForumBundle\Entity\Question;
+use TechForumBundle\Entity\User;
 use TechForumBundle\Repository\AnswerRepository;
 use TechForumBundle\Repository\QuestionRepository;
 use TechForumBundle\Repository\UserRepository;
@@ -179,5 +180,16 @@ class AnswerService implements AnswerServiceInterface
         }
 
         return true;
+    }
+
+    public function getAnswersByCurrentUser(): array
+    {
+        $currentUser = $this->userService->currentUser();
+
+        $answers = $this->answerRepository->findBy(
+            ['author' => $currentUser]
+        );
+
+        return $answers;
     }
 }

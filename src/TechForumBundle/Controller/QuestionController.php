@@ -224,4 +224,21 @@ class QuestionController extends Controller
         return $this->redirectToRoute('question_view', ['id' => $question->getId()]);
     }
 
+    /**
+     * @Route("/questions/my_questions", name="my_questions")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function myQuestions()
+    {
+        $questions = $this->questionService
+            ->getQuestionsByCurrentUser();
+
+        return $this->render("question/my_questions.html.twig",
+            [
+                'questions' => $questions,
+            ]);
+    }
+
 }

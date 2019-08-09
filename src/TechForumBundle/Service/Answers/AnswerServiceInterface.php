@@ -6,6 +6,7 @@ namespace TechForumBundle\Service\Answers;
 
 use TechForumBundle\Entity\Answer;
 use TechForumBundle\Entity\Question;
+use TechForumBundle\Entity\User;
 
 interface AnswerServiceInterface
 {
@@ -21,4 +22,5 @@ interface AnswerServiceInterface
     public function removeLike(Answer $answer): bool;
     public function switchLikes(Answer $answer): bool;
     public function switchVerification(Answer $answer): bool;
+    public function getAnswersByCurrentUser(): array;
 }

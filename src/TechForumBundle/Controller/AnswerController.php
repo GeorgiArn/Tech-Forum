@@ -202,4 +202,21 @@ class AnswerController extends Controller
         return $this->redirectToRoute('question_view',
             ['id' => $answer->getQuestion()->getId()]);
     }
+
+    /**
+     * @Route("/answers/my_answers", name="my_answers")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function myAnswers()
+    {
+        $answers = $this->answerService
+            ->getAnswersByCurrentUser();
+
+        return $this->render("answer/my_answers.html.twig",
+            [
+                'answers' => $answers,
+            ]);
+    }
 }
