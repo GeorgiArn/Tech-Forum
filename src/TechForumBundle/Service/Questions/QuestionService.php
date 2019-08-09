@@ -117,10 +117,16 @@ class QuestionService implements QuestionServiceInterface
      */
     public function switchLikes(Question $question): bool
     {
+        $author = $question->getAuthor();
+
         if ($this->isLikedByCurrentUser($question)) {
             $this->removeLike($question);
+            $points = $author->getTotalPoints() - 2;
+            $author->setTotalPoints($points);
         } else {
             $this->addLike($question);
+            $points = $author->getTotalPoints() + 2;
+            $author->setTotalPoints($points);
         }
         return true;
     }

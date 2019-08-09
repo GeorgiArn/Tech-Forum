@@ -59,4 +59,19 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             return false;
         }
     }
+
+    /**
+     * @return array
+     */
+    public function sort(): array
+    {
+        $users = $this
+            ->createQueryBuilder('user')
+            ->addOrderBy('user.totalPoints', 'DESC')
+            ->addOrderBy('user.username', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return $users;
+    }
 }

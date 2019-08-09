@@ -91,11 +91,19 @@ class User implements UserInterface
      */
     private $likedAnswers;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="totalPoints", type="integer")
+     */
+    private $totalPoints;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->answers = new ArrayCollection();
+        $this->totalPoints = 0;
     }
 
     /**
@@ -385,6 +393,22 @@ class User implements UserInterface
             }
         }
         return $verifiedAnswers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalPoints(): int
+    {
+        return $this->totalPoints;
+    }
+
+    /**
+     * @param int $totalPoints
+     */
+    public function setTotalPoints(int $totalPoints): void
+    {
+        $this->totalPoints = $totalPoints;
     }
 }
 

@@ -80,4 +80,9 @@ class UserService implements UserServiceInterface
     {
         return $this->userRepository->findAll();
     }
+
+    public function rateUsers(): array
+    {
+        return $this->userRepository->sort();
+    }
 }

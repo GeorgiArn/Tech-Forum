@@ -10,6 +10,7 @@
                 <th scope="col" class="text-center">Verified Answers</th>
                 <th scope="col" class="text-center">Total Answers Likes</th>
                 <th scope="col" class="text-center">Total Questions Likes</th>
+                <th scope="col" class="text-center">Total Points</th>
             </tr>
             </thead>
             <tbody>
@@ -19,6 +20,7 @@
                     <td class = "text-center">{{ user.verifiedAnswers }}</td>
                     <td class = "text-center">{{ user.totalAnswersLikes }}</td>
                     <td class = "text-center">{{ user.totalQuestionsLikes }}</td>
+                    <td class = "text-center">{{ user.totalPoints }}</td>
                 </tr>
             {% endfor %}
             </tbody>

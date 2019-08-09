@@ -64,4 +64,18 @@ class QuestionRepository extends \Doctrine\ORM\EntityRepository
             return false;
         }
     }
+
+    public function findAll()
+    {
+        return
+            $this
+                ->createQueryBuilder('questions')
+                ->leftJoin('questions.likers', 'likers')
+                ->groupBy('questions.id')
+                ->addOrderBy('COUNT(likers.id)', 'DESC')
+                ->addOrderBy('questions.dateAdded', 'ASC')
+                ->getQuery()
+                ->getResult();
+
+    }
 }

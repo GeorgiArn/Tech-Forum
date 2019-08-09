@@ -84,9 +84,7 @@ class AnswerService implements AnswerServiceInterface
      */
     public function getAnswersByQuestion(Question $question): array
     {
-        return $this->answerRepository->findBy(
-            ['question' => $question]
-        );
+        return $this->answerRepository->findAnswersByQuestion($question);
     }
 
     /**
@@ -152,20 +150,32 @@ class AnswerService implements AnswerServiceInterface
      */
     public function switchLikes(Answer $answer): bool
     {
+        $author = $answer->getAuthor();
+
         if ($this->isLikedByCurrentUser($answer)) {
             $this->removeLike($answer);
+            $points = $author->getTotalPoints() - 15;
+            $author->setTotalPoints($points);
         } else {
             $this->addLike($answer);
+            $points = $author->getTotalPoints() + 15;
+            $author->setTotalPoints($points);
         }
         return true;
     }
 
     public function switchVerification(Answer $answer): bool
     {
+        $author = $answer->getAuthor();
+
         if ($answer->isVerified()) {
             $answer->setIsVerified(false);
+            $points = $author->getTotalPoints() - 100;
+            $author->setTotalPoints($points);
         } else {
             $answer->setIsVerified(true);
+            $points = $author->getTotalPoints() + 100;
+            $author->setTotalPoints($points);
         }
 
         return true;

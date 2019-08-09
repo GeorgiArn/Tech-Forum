@@ -12,4 +12,5 @@ interface UserServiceInterface
     public function userById(int $id): ?User;
     public function edit(User $user): bool;
     public function getAll(): array;
+    public function rateUsers(): array;
 }

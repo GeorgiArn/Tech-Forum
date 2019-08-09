@@ -117,7 +117,7 @@ class UserController extends Controller
      */
     public function leaderboard()
     {
-        $users = $this->userService->getAll();
+        $users = $this->userService->rateUsers();
 
         return $this->render('users/leaderboard.html.twig',
             ['users' => $users]);

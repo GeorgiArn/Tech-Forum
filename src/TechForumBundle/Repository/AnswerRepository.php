@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use TechForumBundle\Entity\Answer;
+use TechForumBundle\Entity\Question;
 
 /**
  * AnswerRepository
@@ -63,5 +64,22 @@ class AnswerRepository extends \Doctrine\ORM\EntityRepository
         } catch ( ORMException $e ) {
             return false;
         }
+    }
+
+    public function findAnswersByQuestion(Question $question): array
+    {
+        return
+            $this
+                ->createQueryBuilder('answers')
+                ->leftJoin('answers.likers', 'likers')
+                ->where('answers.question = :question')
+                ->setParameter('question', $question)
+                ->groupBy('answers.id')
+                ->addOrderBy('answers.isVerified', 'DESC')
+                ->addOrderBy('COUNT(likers.id)', 'DESC')
+                ->addOrderBy('answers.dateAdded', 'DESC')
+                ->getQuery()
+                ->getResult();
+
     }
 }

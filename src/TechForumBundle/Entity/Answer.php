@@ -70,6 +70,11 @@ class Answer
      */
     private $likers;
 
+    /**
+     * @var int
+     */
+    private $likesCount;
+
     public function __construct()
     {
         $this->dateAdded = new \DateTime('now');
@@ -208,5 +213,23 @@ class Answer
     public function setIsVerified(bool $isVerified): void
     {
         $this->isVerified = $isVerified;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLikesCount(): int
+    {
+        return count($this->likers);
+    }
+
+    /**
+     * @param int $likesCount
+     * @return Answer
+     */
+    public function setLikesCount(int $likesCount): Answer
+    {
+        $this->likesCount = $likesCount;
+        return $this;
     }
 }
