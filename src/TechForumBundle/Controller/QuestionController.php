@@ -81,12 +81,17 @@ class QuestionController extends Controller
         $form = $this->createForm(QuestionType::class, $question);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $this->questionService->create($question);
-            return $this->redirectToRoute('forum_index');
+        try {
+            $this->questionService->validateLength($form);
+        } catch (\Exception $ex) {
+            $this->addFlash("errors", $ex->getMessage());
+            return $this->redirectToRoute('question_ask');
         }
 
-        return $this->redirectToRoute('question_ask');
+        $this->questionService->create($question);
+        $this->addFlash("infos", "Successfully asked question!");
+
+        return $this->redirectToRoute('forum_index');
     }
 
     /**
@@ -160,13 +165,17 @@ class QuestionController extends Controller
         $form = $this->createForm(QuestionType::class, $question);
         $form->handleRequest($request);
 
-        if($form->isValid()) {
-            $this->questionService->update($question);
-
-            return $this->redirectToRoute('forum_index');
+        try {
+            $this->questionService->validateLength($form);
+        } catch (\Exception $ex) {
+            $this->addFlash("errors", $ex->getMessage());
+            return $this->redirectToRoute('question_edit', ['id' => $id]);
         }
 
-        return $this->redirectToRoute('question_edit', ['id' => $id]);
+        $this->questionService->update($question);
+        $this->addFlash("infos", "Successfully edited question!");
+
+        return $this->redirectToRoute('forum_index');
     }
 
     /**
@@ -193,6 +202,7 @@ class QuestionController extends Controller
 
         $this->answerService->deleteAnswersByQuestion($question);
         $this->questionService->delete($question);
+        $this->addFlash("infos", "Successfully deleted question!");
 
         return $this->redirectToRoute('forum_index');
     }

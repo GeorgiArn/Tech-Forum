@@ -48,12 +48,17 @@ class AnswerController extends Controller
         $form = $this->createForm(AnswerType::class, $answer);
         $form->handleRequest($request);
 
-        $this->answerService->create($answer, $id);
+        try {
+            $this->answerService->validateLength($form);
+        } catch (\Exception $ex) {
+            $this->addFlash("errors", $ex->getMessage());
+            return $this->redirectToRoute('question_view',
+                ['id' => $id]);
+        }
 
-        return $this->redirectToRoute('question_view',
-            [
-                'id' => $id
-            ]);
+        $this->answerService->create($answer, $id);
+        $this->addFlash("infos", "Successfully added answer!");
+        return $this->redirectToRoute('question_view', ['id' => $id]);
     }
 
     /**
@@ -158,20 +163,18 @@ class AnswerController extends Controller
         $form = $this->createForm(AnswerType::class, $answer);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $this->answerService->update($answer);
-
-            return $this->redirectToRoute('question_view',
-                [
-                    'id' => $answer->getQuestion()->getId()
-                ]);
+        try {
+            $this->answerService->validateLength($form);
+        } catch (\Exception $ex) {
+            $this->addFlash("errors", $ex->getMessage());
+            return $this->render('answer/edit.html.twig',
+                ['answer' => $answer, 'form' => $form->createView()]);
         }
 
-        return $this->render('answer/edit.html.twig',
-            [
-                'answer' => $answer,
-                'form' => $form->createView()
-            ]);
+        $this->answerService->update($answer);
+        $this->addFlash("infos", "Successfully edited answer!");
+        return $this->redirectToRoute('question_view',
+            ['id' => $answer->getQuestion()->getId()]);
     }
 
     /**
@@ -198,6 +201,7 @@ class AnswerController extends Controller
         }
 
         $this->answerService->delete($answer);
+        $this->addFlash("infos", "Successfully deleted answer!");
 
         return $this->redirectToRoute('question_view',
             ['id' => $answer->getQuestion()->getId()]);

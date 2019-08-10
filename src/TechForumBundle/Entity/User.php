@@ -24,6 +24,7 @@ class User implements UserInterface
     private $id;
 
     /**
+     *
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=255, unique=true)

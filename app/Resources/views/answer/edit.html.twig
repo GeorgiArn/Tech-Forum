@@ -1,6 +1,7 @@
 {% extends 'base.html.twig'%}
 
 {% block body %}
+
     <h2 class = "text-center edit-answer-title">Edit Answer</h2>
     <div class = "container col-md-6 edit-form">
         <form name="edit" action="{{ path('edit_answer', {id: answer.id}) }}" method="post">

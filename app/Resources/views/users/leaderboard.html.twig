@@ -8,13 +8,22 @@
             <tr>
                 <th scope="col" class="text-center">Username</th>
                 <th scope="col" class="text-center">Verified Answers</th>
-                <th scope="col" class="text-center">Total Answers Likes</th>
-                <th scope="col" class="text-center">Total Questions Likes</th>
+                <th scope="col" class="text-center">Answers Likes</th>
+                <th scope="col" class="text-center">Questions Likes</th>
                 <th scope="col" class="text-center">Total Points</th>
             </tr>
             </thead>
             <tbody>
             {% for user in users %}
+                {% if app.user.id == user.id %}
+                    <tr class = "leaderboard-profile">
+                        <td class = "text-center"><a href = {{ path('user_profile', {'id' : user.id}) }}> {{ user.username }}</a></td>
+                        <td class = "text-center">{{ user.verifiedAnswers }}</td>
+                        <td class = "text-center">{{ user.totalAnswersLikes }}</td>
+                        <td class = "text-center">{{ user.totalQuestionsLikes }}</td>
+                        <td class = "text-center">{{ user.totalPoints }}</td>
+                    </tr>
+                {% else %}
                 <tr>
                     <td class = "text-center"><a href = {{ path('user_profile', {'id' : user.id}) }}> {{ user.username }}</a></td>
                     <td class = "text-center">{{ user.verifiedAnswers }}</td>
@@ -22,6 +31,7 @@
                     <td class = "text-center">{{ user.totalQuestionsLikes }}</td>
                     <td class = "text-center">{{ user.totalPoints }}</td>
                 </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>

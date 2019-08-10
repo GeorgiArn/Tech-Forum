@@ -4,6 +4,7 @@
 namespace TechForumBundle\Service\Answers;
 
 
+use Symfony\Component\Form\FormInterface;
 use TechForumBundle\Entity\Answer;
 use TechForumBundle\Entity\Question;
 use TechForumBundle\Entity\User;
@@ -165,6 +166,10 @@ class AnswerService implements AnswerServiceInterface
         return true;
     }
 
+    /**
+     * @param Answer $answer
+     * @return bool
+     */
     public function switchVerification(Answer $answer): bool
     {
         $author = $answer->getAuthor();
@@ -182,6 +187,9 @@ class AnswerService implements AnswerServiceInterface
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function getAnswersByCurrentUser(): array
     {
         $currentUser = $this->userService->currentUser();
@@ -191,5 +199,19 @@ class AnswerService implements AnswerServiceInterface
         );
 
         return $answers;
+    }
+
+    /**
+     * @param FormInterface $form
+     * @return bool
+     * @throws \Exception
+     */
+    public function validateLength(FormInterface $form): bool
+    {
+        if (strlen($form['content']->getData()) < 2) {
+            throw new \Exception("The answer must be at least 2 symbols long!");
+        }
+
+        return true;
     }
 }

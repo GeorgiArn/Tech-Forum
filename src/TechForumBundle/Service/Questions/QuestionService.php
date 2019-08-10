@@ -4,6 +4,7 @@
 namespace TechForumBundle\Service\Questions;
 
 
+use Symfony\Component\Form\FormInterface;
 use TechForumBundle\Entity\Question;
 use TechForumBundle\Repository\QuestionRepository;
 use TechForumBundle\Service\Users\UserService;
@@ -140,5 +141,22 @@ class QuestionService implements QuestionServiceInterface
         ]);
 
         return $questions;
+    }
+
+    /**
+     * @param FormInterface $form
+     * @return bool
+     * @throws \Exception
+     */
+    public function validateLength(FormInterface $form): bool
+    {
+        if (strlen($form['title']->getData()) < 2 ||
+        strlen($form['title']->getData()) > 150) {
+            throw new \Exception("The title must be 4 and 150 symbols long!");
+        } else if (strlen($form['description']->getData()) < 6) {
+            throw new \Exception("The answer must be at least 6 symbols long!");
+        }
+
+        return true;
     }
 }

@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% for message in app.flashes('errors') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
     <h2 class = "text-center edit-question-title">Edit Question</h2>
     <div class = "container col-md-6 edit-form">
         <form name="edit" action="{{ path('question_edit', {id: question.id}) }}" method="post">

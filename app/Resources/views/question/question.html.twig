@@ -21,7 +21,7 @@
                 <p class = "question-author">
                     Author: {{ question.author.fullName }}
                 </p>
-
+                <a class = "btn btn-success" href = "{{ path('answer_question', {id: question.id}) }}" data-toggle="collapse" data-target="#answerQuestion">Have a solution?</a>
                 {% if app.getUser() and (app.getUser().isAuthorOnQuestion(question) or app.getUser().isAdmin()) %}
                     <a class = "btn btn-success" href = "{{ path('question_edit', {id: question.id}) }}">Edit</a>
                     <a class = "btn btn-danger delete-btn" data-toggle="modal" data-target="#deleteModal" href = "{{ path('question_delete', {id: question.id}) }}">Delete</a>
@@ -46,15 +46,17 @@
                 </div>
             </div>
         </div>
-        <div class = "col-md-8">
-            <form name="answer" action="{{ path('answer_question', {id: question.id}) }}" method="post">
-                <div class="form-group">
-                    <label for="answer_content">Content</label>
-                    <textarea class="form-control" rows = "3" name ="answer[content]" required> </textarea>
-                </div>
-                <button type="submit" class="btn btn-primary answer-btn">Answer</button>
-            </form>
-            {{  form_row(form._token) }}
+        <div class="collapse" id="answerQuestion">
+            <div class = "col-md-8">
+                <form name="answer" action="{{ path('answer_question', {id: question.id}) }}" method="post">
+                    <div class="form-group">
+                        <label for="answer_content">Content</label>
+                        <textarea class="form-control" rows = "3" name ="answer[content]" required> </textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary answer-btn">Answer</button>
+                </form>
+                {{  form_row(form._token) }}
+            </div>
         </div>
         <div>
             {% for answer in answers %}

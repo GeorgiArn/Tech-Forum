@@ -32,7 +32,8 @@ class UserController extends Controller
     {
         return $this->render('users/register.html.twig',
             [
-                'form' => $this->createForm(UserType::class)->createView()
+                'form' => $this->createForm(UserType::class)
+                    ->createView()
             ]
         );
     }
@@ -47,11 +48,22 @@ class UserController extends Controller
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-        if ($form->isValid()) {
-            $this->userService->save($user);
-            return $this->redirectToRoute('security_login');
+
+        try {
+            $this->userService->validateLength($form);
+            $this->userService->validatePasswords($form);
+            $this->userService->isUniqueRegister($form);
+        } catch (\Exception $ex) {
+            $this->addFlash("errors", $ex->getMessage());
+            return $this->redirectToRoute('user_register');
         }
-        return $this->redirectToRoute("user_register");
+
+        $this->userService->save($user);
+
+        $this->addFlash("infos", "You have been registered
+        successfully! Now login to our platform to continue.");
+
+        return $this->redirectToRoute('security_login');
     }
 
     /**
@@ -95,19 +107,29 @@ class UserController extends Controller
      */
     public function editProcess(Request $request)
     {
+        $data = [];
         $currUser = $this->userService->currentUser();
+        $data[] = $currUser->getEmail();
+        $data[] = $currUser->getUsername();
 
         $form = $this->createForm(UserType::class, $currUser);
         $form->remove('password');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $this->userService->edit($currUser);
-            return $this->redirectToRoute('user_profile',
-                ['id' => $currUser->getId()]);
+        try {
+            $this->userService->validateLength($form);
+            $this->userService->isUniqueEdit($form, $data);
+        } catch (\Exception $ex) {
+            $this->addFlash("errors", $ex->getMessage());
+            return $this->redirectToRoute('user_edit');
         }
-        return $this->redirectToRoute('user_edit',
+
+        $this->userService->edit($currUser);
+        $this->addFlash("infos", "Successfully edited profile!");
+
+        return $this->redirectToRoute('user_profile',
             ['id' => $currUser->getId()]);
+
     }
 
     /**

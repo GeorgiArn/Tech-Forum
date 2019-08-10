@@ -4,6 +4,7 @@
 namespace TechForumBundle\Service\Questions;
 
 
+use Symfony\Component\Form\FormInterface;
 use TechForumBundle\Entity\Question;
 use TechForumBundle\Entity\User;
 
@@ -19,4 +20,5 @@ interface QuestionServiceInterface
     public function getAll(): array;
     public function switchLikes(Question $question): bool;
     public function getQuestionsByCurrentUser(): array;
+    public function validateLength(FormInterface $form): bool;
 }

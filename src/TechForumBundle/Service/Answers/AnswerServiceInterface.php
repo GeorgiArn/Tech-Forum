@@ -4,6 +4,7 @@
 namespace TechForumBundle\Service\Answers;
 
 
+use Symfony\Component\Form\FormInterface;
 use TechForumBundle\Entity\Answer;
 use TechForumBundle\Entity\Question;
 use TechForumBundle\Entity\User;
@@ -23,4 +24,5 @@ interface AnswerServiceInterface
     public function switchLikes(Answer $answer): bool;
     public function switchVerification(Answer $answer): bool;
     public function getAnswersByCurrentUser(): array;
+    public function validateLength(FormInterface $form): bool;
 }
