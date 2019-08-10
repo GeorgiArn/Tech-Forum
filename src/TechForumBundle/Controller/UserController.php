@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use TechForumBundle\Entity\User;
+use TechForumBundle\Form\AnswerType;
+use TechForumBundle\Form\MessageType;
 use TechForumBundle\Form\UserType;
 use TechForumBundle\Service\Users\UserServiceInterface;
 
@@ -78,7 +80,10 @@ class UserController extends Controller
         $user = $this->userService->userById($id);
 
         return $this->render("users/profile.html.twig",
-            ['user' => $user]);
+            [
+                'user' => $user,
+                'form' => $this->createForm(MessageType::class)->createView()
+            ]);
     }
 
     /**

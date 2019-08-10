@@ -186,4 +186,16 @@ class UserService implements UserServiceInterface
 
         return true;
     }
+
+    public function addUnreadMessage(User $receiver): void
+    {
+        $currentUser = $this->userById($receiver->getId());
+        $currentUser->setUnreadMessages($currentUser->getUnreadMessages() + 1);
+    }
+
+    public function removeUnreadMessages(): void
+    {
+        $currentUser = $this->currentUser();
+        $currentUser->setUnreadMessages(0);
+    }
 }

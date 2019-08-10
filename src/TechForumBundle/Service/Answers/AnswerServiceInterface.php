@@ -7,7 +7,6 @@ namespace TechForumBundle\Service\Answers;
 use Symfony\Component\Form\FormInterface;
 use TechForumBundle\Entity\Answer;
 use TechForumBundle\Entity\Question;
-use TechForumBundle\Entity\User;
 
 interface AnswerServiceInterface
 {

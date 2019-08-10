@@ -3,14 +3,10 @@
 
 namespace TechForumBundle\Service\Answers;
 
-
 use Symfony\Component\Form\FormInterface;
 use TechForumBundle\Entity\Answer;
 use TechForumBundle\Entity\Question;
-use TechForumBundle\Entity\User;
 use TechForumBundle\Repository\AnswerRepository;
-use TechForumBundle\Repository\QuestionRepository;
-use TechForumBundle\Repository\UserRepository;
 use TechForumBundle\Service\Questions\QuestionService;
 use TechForumBundle\Service\Users\UserService;
 

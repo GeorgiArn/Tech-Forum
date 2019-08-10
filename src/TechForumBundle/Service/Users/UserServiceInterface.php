@@ -20,4 +20,7 @@ interface UserServiceInterface
     public function validateLength(FormInterface $form): bool;
     public function validatePasswords(FormInterface $form): bool;
     public function isUniqueEdit(FormInterface $form, array $data): bool;
+    public function addUnreadMessage(User $receiver): void;
+    public function removeUnreadMessages(): void;
+
 }

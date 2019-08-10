@@ -185,7 +185,7 @@ class AnswerController extends Controller
      * @param int $id
      * @return RedirectResponse
      */
-    public function deleteAnswer(int $id)
+    public function delete(int $id)
     {
 
         $answer = $this->answerService->answerById($id);

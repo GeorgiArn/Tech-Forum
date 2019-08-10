@@ -25,8 +25,24 @@
                 <a class = "btn btn-info" href = "{{ path('user_edit') }}">Edit Profile</a>
             </div>
         {% endif %}
+
+        <div class = "back-btn">
+            <a class = "btn btn-success"  href = "{{ path('create_message', {id: user.id}) }}" data-toggle="collapse" data-target="#leaveMessage">Leave a message</a>
+        </div>
         <div class = "back-btn">
             <a class = "btn btn-secondary" href="{{ path('forum_index') }}">Back</a>
+        </div>
+    </div>
+    <div class="collapse" id="leaveMessage">
+        <div class = "col-md-8">
+            <form name="message" action="{{ path('create_message', {id: user.id}) }}" method="post">
+                <div class="form-group">
+                    <label for="message_content">Content</label>
+                    <textarea class="form-control" rows = "3" name ="message[content]" required> </textarea>
+                </div>
+                <button type="submit" class="btn btn-primary answer-btn">Sent</button>
+            </form>
+            {{  form_row(form._token) }}
         </div>
     </div>
 </div>

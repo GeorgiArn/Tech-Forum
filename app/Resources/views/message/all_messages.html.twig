@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class = "container">
+        <h2 class="text-center mailbox-title">Mailbox</h2>
+        <div class = "message-buttons">
+            <a class="btn btn-success" href = "{{ path('sent_messages') }}">View sent messages</a>
+            <a class="btn btn-secondary" href = "{{ path('user_profile', {'id': app.user.id}) }}">Back</a>
+        </div>
+        {% for message in messages %}
+            <div class = "message">
+                <p>{{ message.content }}</p>
+                <p>Sent by: <a href = "{{ path('user_profile', {'id': message.sender.id}) }}">{{ message.sender.fullName }}</a></p>
+                <p>Sent on: {{ message.dateAdded|date("F jS \\a\\t g:ia") }}</p>
+            </div>
+        {% endfor %}
+
+    </div>
+{% endblock %}

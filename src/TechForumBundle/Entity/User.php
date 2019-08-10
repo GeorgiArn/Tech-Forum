@@ -99,12 +99,36 @@ class User implements UserInterface
      */
     private $totalPoints;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="TechForumBundle\Entity\Message", mappedBy="sender")
+     */
+    private $sendMessages;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="TechForumBundle\Entity\Message", mappedBy="receiver")
+     */
+    private $receivedMessages;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="unread_messages", type="integer")
+     */
+    private $unreadMessages;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->answers = new ArrayCollection();
+        $this->sendMessages = new ArrayCollection();
+        $this->receivedMessages = new ArrayCollection();
         $this->totalPoints = 0;
+        $this->unreadMessages = 0;
     }
 
     /**
@@ -328,6 +352,15 @@ class User implements UserInterface
     }
 
     /**
+     * @param Message $message
+     * @return bool
+     */
+    public function isAuthorOnMessage(Message $message)
+    {
+        return $message->getSender()->getId() === $this->getId();
+    }
+
+    /**
      * @return bool
      */
     public function isAdmin()
@@ -410,6 +443,60 @@ class User implements UserInterface
     public function setTotalPoints(int $totalPoints): void
     {
         $this->totalPoints = $totalPoints;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getSendMessages(): ArrayCollection
+    {
+        return $this->sendMessages;
+    }
+
+    /**
+     * @param Message $sendMessage
+     * @return User
+     */
+    public function addSendMessages(Message $sendMessage)
+    {
+        $this->sendMessages[] = $sendMessage;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getReceivedMessages(): ArrayCollection
+    {
+        return $this->receivedMessages;
+    }
+
+    /**
+     * @param Message $receivedMessage
+     * @return User
+     */
+    public function setReceivedMessages(Message $receivedMessage)
+    {
+        $this->receivedMessages[] = $receivedMessage;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnreadMessages(): int
+    {
+        return $this->unreadMessages;
+    }
+
+    /**
+     * @param int $unreadMessages
+     */
+    public function setUnreadMessages(int $unreadMessages): void
+    {
+        $this->unreadMessages = $unreadMessages;
     }
 }
 

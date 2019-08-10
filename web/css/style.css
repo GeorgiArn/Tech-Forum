@@ -93,3 +93,25 @@ body {
 .leaderboard-profile {
   background-color: lightgreen;
 }
+
+.mailbox-title {
+  margin-top: 20px;
+}
+
+#leaveMessage {
+  margin-top: 20px;
+}
+
+.message-buttons {
+  text-align: right;
+}
+
+.message {
+  background-color: whitesmoke;
+  padding: 20px;
+  margin: 20px;
+}
+
+.edit-message-title {
+  margin-top: 20px;
+}

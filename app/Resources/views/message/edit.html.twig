@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2 class = "text-center edit-message-title">Edit Message</h2>
+    <div class = "container col-md-6 edit-form">
+        <form name="edit" action="{{ path('edit_message', {id: message.id}) }}" method="post">
+            <div class="form-group">
+                <label for="message_content">Message</label>
+                <textarea class="form-control" rows = "3" name ="message[content]" required>{{ message.content }} </textarea>
+            </div>
+            <a class = "btn btn-secondary" href = "{{ path('sent_messages')}}">Cancel</a>
+            <button type="submit" class="btn btn-primary edit-message-btn">Edit Message</button>
+            {{  form_row(form._token) }}
+        </form>
+    </div>
+{% endblock %}
+
