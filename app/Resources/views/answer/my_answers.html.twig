@@ -6,6 +6,10 @@
             {% for answer in answers %}
                 <div class = "col-md-12 col-sm-12 answer">
                     <p class = "answer-content">{{ answer.content }}</p>
+                    <p class = "answer-likes">Likes: {{ answer.likers|length }}</p>
+                    <p class = "date-answered">
+                        Answered on: {{ answer.dateAdded|date("F jS \\a\\t g:ia") }}
+                    </p>
                     <div class = "read-more-btn">
                         <a class = "btn btn-primary" href = "{{ path('question_view', {'id': answer.question.id}) }}">View</a>
                         <a class = "btn btn-success" href = "{{ path('edit_answer', {id: answer.id}) }}">Edit</a>

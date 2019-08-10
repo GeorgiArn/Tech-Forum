@@ -7,7 +7,17 @@
                 <div class = "col-md-12 col-sm-12 question">
                     <h2 class = "question-title">{{ question.title }}</h2>
                     <p class = "question-description">{{ question.description }}</p>
-                    <p class = "question-category">Category: {{ question.category.name }}</p>
+                    <div class = "row">
+                        <div class = "col-md-6">
+                            <p class = "question-likes">Likes: {{ question.likers|length }}</p>
+                        </div>
+                        <div class = "col-md-6">
+                            <p class = "question-category">Category: {{ question.category.name }}</p>
+                        </div>
+                    </div>
+                    <p class = "date-asked">
+                        Asked on: {{ question.dateAdded|date("F jS \\a\\t g:ia") }}
+                    </p>
                     <div class = "read-more-btn">
                         <a class = "btn btn-primary" href = "{{ path('question_view', {'id': question.id}) }}">View</a>
                         <a class = "btn btn-success" href = "{{ path('question_edit', {id: question.id}) }}">Edit</a>

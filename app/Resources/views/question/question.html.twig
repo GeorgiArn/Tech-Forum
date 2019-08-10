@@ -17,10 +17,27 @@
                     {% endif %}
                 {% endif %}
                 <p class = "question-description">{{ question.description }}</p>
-                <p class = "question-category">Category: {{ question.category.name }}</p>
-                <p class = "question-author">
-                    Author: {{ question.author.fullName }}
-                </p>
+                <div class = "row">
+                    <div class = "col-md-6">
+                        <p class = "question-likes">Likes: {{ question.likers|length }}</p>
+                    </div>
+                    <div class = "col-md-6">
+                        <p class = "question-category">Category: {{ question.category.name }}</p>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class = "col-md-6">
+                        <p class = "date-asked">
+                            Asked on: {{ question.dateAdded|date("F jS \\a\\t g:ia") }}
+                        </p>
+                    </div>
+                    <div class = "col-md-6">
+                        <p class = "question-author">
+                            Author: <a href = "{{ path('user_profile', {'id': question.author.id}) }}">{{ question.author.fullName }}</a>
+                        </p>
+                    </div>
+                </div>
+
                 <a class = "btn btn-success" href = "{{ path('answer_question', {id: question.id}) }}" data-toggle="collapse" data-target="#answerQuestion">Have a solution?</a>
                 {% if app.getUser() and (app.getUser().isAuthorOnQuestion(question) or app.getUser().isAdmin()) %}
                     <a class = "btn btn-success" href = "{{ path('question_edit', {id: question.id}) }}">Edit</a>
@@ -103,7 +120,10 @@
                                     </p>
                                 {% endif %}
                             {% endif %}
-                            <p class = "text-center answer-author">Author: {{ answer.author.fullName }}</p>
+                            <p class = "text-center answer-author">Author: <a href = "{{ path('user_profile', {'id': answer.author.id}) }}">{{ answer.author.fullName }}</a></p>
+                            <p class = "text-center date-answered">
+                                Answered on: {{ answer.dateAdded|date("F jS \\a\\t g:ia") }}
+                            </p>
                         </div>
                     </div>
                 </div>
