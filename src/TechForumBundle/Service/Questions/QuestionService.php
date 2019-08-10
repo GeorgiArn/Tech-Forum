@@ -136,9 +136,7 @@ class QuestionService implements QuestionServiceInterface
     {
         $currentUser = $this->userService->currentUser();
 
-        $questions = $this->questionRepository->findBy([
-            'author' => $currentUser
-        ]);
+        $questions = $this->questionRepository->findQuestionsByCurrentUser($currentUser);
 
         return $questions;
     }

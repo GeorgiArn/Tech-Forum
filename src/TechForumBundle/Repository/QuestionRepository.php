@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use TechForumBundle\Entity\Question;
+use TechForumBundle\Entity\User;
 
 /**
  * QuestionRepository
@@ -76,6 +77,17 @@ class QuestionRepository extends \Doctrine\ORM\EntityRepository
                 ->addOrderBy('questions.dateAdded', 'ASC')
                 ->getQuery()
                 ->getResult();
+    }
 
+    public function findQuestionsByCurrentUser(User $user)
+    {
+        return
+            $this
+                ->createQueryBuilder('questions')
+                ->where('questions.author = :user')
+                ->setParameter('user', $user)
+                ->addOrderBy('questions.dateAdded', 'DESC')
+                ->getQuery()
+                ->getResult();
     }
 }

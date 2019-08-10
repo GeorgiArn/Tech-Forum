@@ -8,6 +8,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use TechForumBundle\Entity\Answer;
 use TechForumBundle\Entity\Question;
+use TechForumBundle\Entity\User;
 
 /**
  * AnswerRepository
@@ -80,6 +81,17 @@ class AnswerRepository extends \Doctrine\ORM\EntityRepository
                 ->addOrderBy('answers.dateAdded', 'DESC')
                 ->getQuery()
                 ->getResult();
+    }
 
+    public function findAnswersByCurrentUser(User $user)
+    {
+        return
+            $this
+                ->createQueryBuilder('answers')
+                ->where('answers.author = :user')
+                ->setParameter('user', $user)
+                ->addOrderBy('answers.dateAdded', 'DESC')
+                ->getQuery()
+                ->getResult();
     }
 }

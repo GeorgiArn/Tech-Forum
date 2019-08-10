@@ -194,9 +194,7 @@ class AnswerService implements AnswerServiceInterface
     {
         $currentUser = $this->userService->currentUser();
 
-        $answers = $this->answerRepository->findBy(
-            ['author' => $currentUser]
-        );
+        $answers = $this->answerRepository->findAnswersByCurrentUser($currentUser);
 
         return $answers;
     }
