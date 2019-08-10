@@ -13,7 +13,23 @@
                     <div class = "read-more-btn">
                         <a class = "btn btn-primary" href = "{{ path('question_view', {'id': answer.question.id}) }}">View</a>
                         <a class = "btn btn-success" href = "{{ path('edit_answer', {id: answer.id}) }}">Edit</a>
-                        <a class = "btn btn-danger" href="{{ path('answer_delete', {id: answer.id}) }}">Delete Answer</a>
+                        <a class = "btn btn-danger" data-toggle="modal" data-target="#deleteModalAnswer{{answer.id}}"  href="{{ path('answer_delete', {id: answer.id}) }}">Delete Answer</a>
+                    </div>
+                </div>
+                <div class="modal fade" id="deleteModalAnswer{{ answer.id }}" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5>Delete answer</h5>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete this answer?
+                            </div>
+                            <div class="modal-footer">
+                                <a type="button" class="btn btn-secondary cancel-delete-btn" data-dismiss="modal" href = "{{ path('my_answers') }}">Cancel</a>
+                                <a type="button" class="btn btn-danger" href = "{{ path('answer_delete', {id: answer.id}) }}">Delete</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
