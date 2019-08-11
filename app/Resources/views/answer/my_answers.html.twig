@@ -2,39 +2,43 @@
 
 {% block body %}
     <div class = "container">
-        <div class = "row answers-list">
-            {% for answer in answers %}
-                <div class = "col-md-12 col-sm-12 answer">
-                    <p class = "answer-content">{{ answer.content }}</p>
-                    <p class = "answer-likes">Likes: {{ answer.likers|length }}</p>
-                    <p class = "date-answered">
-                        Answered on: {{ answer.dateAdded|date("F jS \\a\\t g:ia") }}
-                    </p>
-                    <div class = "read-more-btn">
-                        <a class = "btn btn-primary" href = "{{ path('question_view', {'id': answer.question.id}) }}">View</a>
-                        <a class = "btn btn-success" href = "{{ path('edit_answer', {id: answer.id}) }}">Edit</a>
-                        <a class = "btn btn-danger" data-toggle="modal" data-target="#deleteModalAnswer{{answer.id}}"  href="{{ path('answer_delete', {id: answer.id}) }}">Delete Answer</a>
-                    </div>
-                </div>
-                <div class="modal fade" id="deleteModalAnswer{{ answer.id }}" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5>Delete answer</h5>
+            {% if answers|length != 0 %}
+                {% for answer in answers %}
+                    <div class = "row answers-list">
+                        <div class = "col-md-12 col-sm-12 answer">
+                            <p class = "answer-content">{{ answer.content }}</p>
+                            <p class = "answer-likes">Likes: {{ answer.likers|length }}</p>
+                            <p class = "date-answered">
+                                Answered on: {{ answer.dateAdded|date("F jS \\a\\t g:ia") }}
+                            </p>
+                            <div class = "read-more-btn">
+                                <a class = "btn btn-primary" href = "{{ path('question_view', {'id': answer.question.id}) }}">View</a>
+                                <a class = "btn btn-success" href = "{{ path('edit_answer', {id: answer.id}) }}">Edit</a>
+                                <a class = "btn btn-danger" data-toggle="modal" data-target="#deleteModalAnswer{{answer.id}}"  href="{{ path('answer_delete', {id: answer.id}) }}">Delete Answer</a>
                             </div>
-                            <div class="modal-body">
-                                Are you sure you want to delete this answer?
-                            </div>
-                            <div class="modal-footer">
-                                <a type="button" class="btn btn-secondary cancel-delete-btn" data-dismiss="modal" href = "{{ path('my_answers') }}">Cancel</a>
-                                <a type="button" class="btn btn-danger" href = "{{ path('answer_delete', {id: answer.id}) }}">Delete</a>
+                        </div>
+                        <div class="modal fade" id="deleteModalAnswer{{ answer.id }}" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5>Delete answer</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this answer?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a type="button" class="btn btn-secondary cancel-delete-btn" data-dismiss="modal" href = "{{ path('my_answers') }}">Cancel</a>
+                                        <a type="button" class="btn btn-danger" href = "{{ path('answer_delete', {id: answer.id}) }}">Delete</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-            <a class = "btn btn-secondary" href = "{{ path('forum_index')}}">Back</a>
-        </div>
+                {% endfor %}
+                <a class = "btn btn-secondary" href = "{{ path('user_profile', {'id': app.user.id})}}">Back</a>
+            {% else %}
+                <h2 class = "text-center reject">You don't have any answers, yet.</h2>
+            {% endif %}
     </div>
 {% endblock %}
 

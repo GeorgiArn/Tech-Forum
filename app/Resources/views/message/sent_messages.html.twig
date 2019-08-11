@@ -3,15 +3,19 @@
 {% block body %}
     <div class = "container">
         <h2 class="text-center mailbox-title">Sent Messages</h2>
-        {% for message in messages %}
-            <div class="message">
-                <p>{{ message.content }}</p>
-                <p>Sent to: <a href = "{{ path('user_profile', {'id': message.sender.id}) }}">{{ message.sender.fullName }}</a></p>
-                <p>Sent on: {{ message.dateAdded|date("F jS \\a\\t g:ia") }}</p>
-                <a class="btn btn-success" href = "{{ path('edit_message', {'id': message.id}) }}">Edit</a>
-                <a class="btn btn-danger" href="{{ path('message_delete', {'id': message.id}) }}">Delete</a>
-            </div>
-        {% endfor %}
+        {% if messages|length != 0 %}
+            {% for message in messages %}
+                <div class="message">
+                    <p>{{ message.content }}</p>
+                    <p>Sent to: <a href = "{{ path('user_profile', {'id': message.receiver.id}) }}">{{ message.receiver.fullName }}</a></p>
+                    <p>Sent on: {{ message.dateAdded|date("F jS \\a\\t g:ia") }}</p>
+                    <a class="btn btn-success" href = "{{ path('edit_message', {'id': message.id}) }}">Edit</a>
+                    <a class="btn btn-danger" href="{{ path('message_delete', {'id': message.id}) }}">Delete</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h2 class = "text-center reject">You haven't sent any messages, yet.</h2>
+        {% endif %}
     </div>
 {% endblock %}
 

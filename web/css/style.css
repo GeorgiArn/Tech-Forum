@@ -115,3 +115,8 @@ body {
 .edit-message-title {
   margin-top: 20px;
 }
+
+.reject {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
