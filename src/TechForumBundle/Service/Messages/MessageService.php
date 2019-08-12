@@ -10,6 +10,8 @@ use TechForumBundle\Service\Users\UserService;
 
 class MessageService implements MessageServiceInterface
 {
+    const CONTENT_MIN_LENGTH = 6;
+
     private $messageRepository;
     private $userService;
 
@@ -104,8 +106,8 @@ class MessageService implements MessageServiceInterface
      */
     public function validateLength(FormInterface $form): bool
     {
-        if (strlen($form['content']->getData()) < 2) {
-            throw new \Exception("The message must be at least 2 symbols long!");
+        if (strlen($form['content']->getData()) < self::CONTENT_MIN_LENGTH ) {
+            throw new \Exception("Content must be at least " . self::CONTENT_MIN_LENGTH . "symbols long!");
         }
 
         return true;

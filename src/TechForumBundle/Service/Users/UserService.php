@@ -13,6 +13,18 @@ use TechForumBundle\Service\Roles\RoleService;
 
 class UserService implements UserServiceInterface
 {
+    private CONST EMAIL_MIN_LENGTH = 5;
+    private CONST EMAIL_MAX_LENGTH = 255;
+
+    private CONST FULL_NAME_MIN_LENGTH = 4;
+    private CONST FULL_NAME_MAX_LENGTH = 255;
+
+    private CONST USERNAME_MIN_LENGTH = 2;
+    private CONST USERNAME_MAX_LENGTH = 255;
+
+    private CONST PASSWORD_MIN_LENGTH = 6;
+    private CONST PASSWORD_MAX_LENGTH = 255;
+
     private $security;
     private $userRepository;
     private $encryptionService;
@@ -132,19 +144,19 @@ class UserService implements UserServiceInterface
      */
     public function validateLength(FormInterface $form): bool
     {
-        if (strlen($form['email']->getData()) < 4
-            || strlen(strlen($form['email']->getData()) > 50)) {
-            throw new \Exception("Email must be between 4 and 50 symbols!");
-        } else if (strlen($form['fullName']->getData()) < 3
-                   || strlen($form['fullName']->getData()) > 50) {
-            throw new \Exception("Full Name must be between 3 and 50 symbols!");
-        } else if (strlen($form['username']->getData()) < 2
-                   || strlen($form['username']->getData()) > 50) {
-            throw new \Exception("Username must be between 2 and 50 symbols!");
+        if (strlen($form['email']->getData()) < self::EMAIL_MIN_LENGTH
+            || strlen(strlen($form['email']->getData()) > self::EMAIL_MAX_LENGTH)) {
+            throw new \Exception("Email must be between " . self::EMAIL_MIN_LENGTH . " and " . self::EMAIL_MAX_LENGTH . " symbols!");
+        } else if (strlen($form['fullName']->getData()) < self::FULL_NAME_MIN_LENGTH
+                   || strlen($form['fullName']->getData()) > self::FULL_NAME_MAX_LENGTH) {
+            throw new \Exception("Full Name must be between " . self::FULL_NAME_MIN_LENGTH . " and " . self::FULL_NAME_MAX_LENGTH . " symbols!");
+        } else if (strlen($form['username']->getData()) < self::USERNAME_MIN_LENGTH
+                   || strlen($form['username']->getData()) > self::USERNAME_MAX_LENGTH) {
+            throw new \Exception("Username must be between " . self::USERNAME_MIN_LENGTH  . " and " . self::USERNAME_MAX_LENGTH . " symbols!");
         } else if (isset($form['password']['first'])) {
-            if (strlen($form['password']['first']->getData()) < 6
-                 || strlen($form['password']['first']->getData()) > 50) {
-                throw new \Exception("Password must be between 6 and 50 symbols!");
+            if (strlen($form['password']['first']->getData()) < self::PASSWORD_MIN_LENGTH
+                 || strlen($form['password']['first']->getData()) > self::PASSWORD_MAX_LENGTH) {
+                throw new \Exception("Password must be between " . self::PASSWORD_MIN_LENGTH . " and " . self::PASSWORD_MAX_LENGTH . " symbols!");
             }
         }
 

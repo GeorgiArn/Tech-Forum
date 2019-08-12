@@ -11,6 +11,10 @@ use TechForumBundle\Service\Users\UserService;
 
 class QuestionService implements QuestionServiceInterface
 {
+    const TITLE_MIN_LENGTH = 6;
+    const TITLE_MAX_LENGTH = 255;
+
+    const DESCRIPTION_MIN_LENGTH = 6;
 
     private $questionRepository;
     private $userService;
@@ -148,11 +152,11 @@ class QuestionService implements QuestionServiceInterface
      */
     public function validateLength(FormInterface $form): bool
     {
-        if (strlen($form['title']->getData()) < 2 ||
-        strlen($form['title']->getData()) > 150) {
-            throw new \Exception("The title must be 4 and 150 symbols long!");
+        if (strlen($form['title']->getData()) < self::TITLE_MIN_LENGTH ||
+        strlen($form['title']->getData()) > self::TITLE_MAX_LENGTH) {
+            throw new \Exception("The title must be " . self::TITLE_MIN_LENGTH . " and " . self::TITLE_MAX_LENGTH . " symbols long!");
         } else if (strlen($form['description']->getData()) < 6) {
-            throw new \Exception("The answer must be at least 6 symbols long!");
+            throw new \Exception("The answer must be at least " . self::DESCRIPTION_MIN_LENGTH . " symbols long!");
         }
 
         return true;

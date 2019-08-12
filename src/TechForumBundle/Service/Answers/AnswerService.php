@@ -12,6 +12,9 @@ use TechForumBundle\Service\Users\UserService;
 
 class AnswerService implements AnswerServiceInterface
 {
+
+    const CONTENT_MIN_LENGTH = 6;
+
     private $answerRepository;
     private $questionService;
     private $userService;
@@ -202,8 +205,8 @@ class AnswerService implements AnswerServiceInterface
      */
     public function validateLength(FormInterface $form): bool
     {
-        if (strlen($form['content']->getData()) < 2) {
-            throw new \Exception("The answer must be at least 2 symbols long!");
+        if (strlen($form['content']->getData()) < self::CONTENT_MIN_LENGTH) {
+            throw new \Exception("The answer must be at least" . self::CONTENT_MIN_LENGTH . "symbols long!");
         }
 
         return true;
