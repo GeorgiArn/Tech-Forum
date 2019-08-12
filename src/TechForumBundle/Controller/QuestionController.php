@@ -238,7 +238,7 @@ class QuestionController extends Controller
      * @Route("/questions/my_questions", name="my_questions")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function myQuestions()
     {
@@ -249,6 +249,23 @@ class QuestionController extends Controller
             [
                 'questions' => $questions,
             ]);
+    }
+
+    /**
+     * @Route("/questions/search", name="search_questions")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param string $search
+     * @return Response
+     */
+    public function search()
+    {
+        $search = $_POST['search'];
+
+        $questions = $this->questionService->getAllBySearch($search);
+
+        return $this->render('question/searched_questions.html.twig',
+            ['questions' => $questions]);
     }
 
 }

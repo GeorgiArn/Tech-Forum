@@ -21,4 +21,5 @@ interface QuestionServiceInterface
     public function switchLikes(Question $question): bool;
     public function getQuestionsByCurrentUser(): array;
     public function validateLength(FormInterface $form): bool;
+    public function getAllBySearch(string $search): array;
 }

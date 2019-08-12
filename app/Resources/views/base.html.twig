@@ -23,6 +23,11 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav">
                     {% if app.user %}
+                        <li class="nav-item float-right search-engine">
+                            <form name="search" action="{{ path('search_questions') }}" method="post">
+                                <input type="text" class="form-control" placeholder="Search" name = "search" required>
+                            </form>
+                        </li>
                         <li class="nav-item float-right">
                             <a class="nav-link" href="{{ path('question_ask') }}">Ask question</a>
                         </li>
