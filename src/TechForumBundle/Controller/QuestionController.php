@@ -15,6 +15,7 @@ use TechForumBundle\Form\QuestionType;
 use TechForumBundle\Service\Answers\AnswerService;
 use TechForumBundle\Service\Categories\CategoryService;
 use TechForumBundle\Service\Questions\QuestionService;
+use TechForumBundle\Service\Search\SearchService;
 use TechForumBundle\Service\Users\UserService;
 
 class QuestionController extends Controller
@@ -39,15 +40,22 @@ class QuestionController extends Controller
      */
     private $userService;
 
+    /**
+     * @var SearchService
+     */
+    private $searchService;
+
     public function __construct(QuestionService $questionService,
                                 CategoryService $categoryService,
                                 AnswerService $answerService,
-                                UserService $userService)
+                                UserService $userService,
+                                SearchService $searchService)
     {
         $this->questionService = $questionService;
         $this->categoryService = $categoryService;
         $this->answerService = $answerService;
         $this->userService = $userService;
+        $this->searchService = $searchService;
     }
 
     /**
@@ -262,7 +270,7 @@ class QuestionController extends Controller
     {
         $search = $_POST['search'];
 
-        $questions = $this->questionService->getAllBySearch($search);
+        $questions = $this->searchService->getAllBySearch($search);
 
         return $this->render('question/searched_questions.html.twig',
             ['questions' => $questions]);
