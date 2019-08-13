@@ -26,6 +26,7 @@ body {
 
 .question-title {
   text-align: left;
+  margin-bottom: 20px;
 }
 
 .question-author {
