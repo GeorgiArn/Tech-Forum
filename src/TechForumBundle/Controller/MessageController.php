@@ -55,7 +55,7 @@ class MessageController extends Controller
         $this->userService->edit($currentUser);
 
         $this->addFlash("infos", "Successfully sent message!");
-        return $this->redirectToRoute('user_profile', ['id' => $id]);
+        return $this->redirectToRoute('forum_index');
     }
 
     /**
@@ -72,7 +72,10 @@ class MessageController extends Controller
         $this->userService->edit($this->userService->currentUser());
 
         return $this->render('message/all_messages.html.twig',
-            ['messages' => $messages]);
+            [
+                'messages' => $messages,
+                'form' => $this->createForm(MessageType::class)->createView()
+            ]);
     }
 
     /**

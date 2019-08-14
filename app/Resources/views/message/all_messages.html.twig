@@ -13,6 +13,19 @@
                     <p>{{ message.content }}</p>
                     <p>Sent by: <a href = "{{ path('user_profile', {'id': message.sender.id}) }}">{{ message.sender.fullName }}</a></p>
                     <p>Sent on: {{ message.dateAdded|date("F jS \\a\\t g:ia") }}</p>
+                    <a class = "btn btn-success"  href = "{{ path('create_message', {id: message.sender.id}) }}" data-toggle="collapse" data-target="#reply{{ message.sender.id }}">Reply</a>
+                    <div class="collapse" id="reply{{ message.sender.id }}">
+                        <div class = "col-md-8">
+                            <form name="message" action="{{ path('create_message', {id: message.sender.id}) }}" method="post">
+                                <div class="form-group">
+                                    <label for="message_content">Content</label>
+                                    <textarea class="form-control" rows = "3" name ="message[content]" required> </textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary answer-btn">Sent</button>
+                            </form>
+                            {{  form_row(form._token) }}
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
         {% else %}
